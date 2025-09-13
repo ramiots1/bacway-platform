@@ -2,13 +2,17 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from '@/i18n/TranslationProvider';
+import LanguageSwitcher from '@/i18n/LanguageSwitcher';
 
 const NavbarPublic = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+    const { t } = useTranslation();
 
     const scrollToTop = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -21,7 +25,7 @@ const NavbarPublic = () => {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 0) {
+            if (window.scrollY > 50) {
                 setIsScrolled(true);
             } else {
                 setIsScrolled(false);
@@ -38,7 +42,7 @@ const NavbarPublic = () => {
     useEffect(() => {
         const handleOutsideClick = (e: Event) => {
             if (!isMenuOpen) return;
-            const ev: any = e;
+            const ev = e as Event & { composedPath?: () => EventTarget[], path?: EventTarget[] };
             const path: EventTarget[] = ev.composedPath ? ev.composedPath() : (ev.path || []);
             // If composedPath is not available, fall back to target containment checks
             if (path && path.length) {
@@ -64,33 +68,46 @@ const NavbarPublic = () => {
     }, [isMenuOpen]);
 
     return (
-        <nav className="fixed left-1/2 -translate-x-1/2 flex flex-col justify-center w-[calc(100%-2rem)] md:w-[calc(100%-10rem)] max-w-7xl top-5 rounded-4xl overflow-hidden">
+        <nav className="fixed left-1/2 -translate-x-1/2 flex flex-col justify-center w-[calc(100%-2rem)] md:w-[calc(100%-5rem)] max-w-7xl top-5 rounded-4xl overflow-hidden z-100 ">
             {/* Desktop and Mobile Navbar */}
-            <div className={` backdrop-blur-sm flex h-16 w-full items-center justify-between px-8 md:px-10 transition-all duration-300 z-50 
+            <div className={` backdrop-blur-sm flex h-16 w-full items-center justify-between px-8 md:px-10 transition-all duration-300 z-100
                 ${isScrolled 
                     ? 'bg-black md:bg-black/60' 
                     : 'bg-black md:bg-transparent'
                 }
                 ${!isMenuOpen && "rounded-4xl"}`}>
-
-                <Link href="/" className="flex items-center" onClick={scrollToTop}>
-                    <img src="/logowhite.svg" alt="Logo" className="h-4" />
-                </Link>
+                
+                <div className='flex items-center gap-4'>
+                    <Link href="/" className="flex items-center" onClick={scrollToTop}>
+                    <Image src="/bacwayLogoWhite.svg" alt="Logo" width={80} height={18} className="h-4.5" />
+                    </Link>
+                    <div className="hidden md:block">
+                    <LanguageSwitcher />
+                </div>
+                </div>
+                
+                
+                <div className="md:hidden">
+                    <LanguageSwitcher />
+                </div>
+                
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden md:flex items-center gap-6">
                     <Link href="/" className="hover:text-gray-300 transition-colors" onClick={scrollToTop}>
-                        Home
+                        <span suppressHydrationWarning>{t('nav.home')}</span>
                     </Link>
                     <Link href="/collabs" className=" hover:text-gray-300 transition-colors">
-                        Collab
+                        <span suppressHydrationWarning>{t('nav.collab')}</span>
                     </Link>
                     <Link href="/about" className=" hover:text-gray-300 transition-colors">
-                        About
+                        <span suppressHydrationWarning>{t('nav.about')}</span>
                     </Link>
-                    <Link href="/login" className=" hover:text-gray-300 transition-colors border-1 rounded-2xl px-8 py-1.5">
-                        Log in
+                    <Link href="/login" className=" hover:text-gray-300 transition-colors border-1 rounded-2xl px-6 py-1">
+                        <span suppressHydrationWarning>{t('nav.login')}</span>
                     </Link>
+
+                    
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -128,28 +145,28 @@ const NavbarPublic = () => {
                                 setIsMenuOpen(false);
                             }}
                         >
-                            Home
+                            <span suppressHydrationWarning>{t('nav.home')}</span>
                         </Link>
                         <Link 
                             href="/collabs" 
                             className=" hover:text-gray-300 transition-colors w-full text-center py-2"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Collab
+                            <span suppressHydrationWarning>{t('nav.collab')}</span>
                         </Link>
                         <Link 
                             href="/about" 
                             className=" hover:text-gray-300 transition-colors w-full text-center py-2"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            About
+                            <span suppressHydrationWarning>{t('nav.about')}</span>
                         </Link>
                         <Link 
                             href="/login" 
-                            className=" hover:text-gray-300 border-1 w-25 rounded-2xl transition-colors text-center py-2"
+                            className=" hover:text-gray-300 border-1 w-35 rounded-2xl transition-colors text-center py-1"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Log in
+                            <span suppressHydrationWarning>{t('nav.login')}</span>
                         </Link>
                     </div>
                 </div>

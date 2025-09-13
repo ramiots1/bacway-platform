@@ -1,22 +1,27 @@
 @import "tailwindcss";
 
+/* explicit weights instead of range (some PostCSS parsers don't accept ".." range syntax) */
+/* Google Fonts imports moved to the document head in app/layout.tsx to avoid PostCSS parsing issues */
+
 :root {
   --background: #0C1114;
   --foreground: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-}
+/* theme block removed because some CSS parsers (PostCSS) don't recognize @theme rules */
+
+/* color-scheme rules can be added here if needed */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Default latin font */
+  font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  overflow-x: clip;
+}
+
+/* Use Noto Kufi Arabic for Arabic text or when page is RTL */
+:lang(ar), [dir="rtl"] {
+  font-family: 'Noto Kufi Arabic', 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }

@@ -1,10 +1,9 @@
-import NavbarPublic from '@/components/layout/NavbarPublic';
+import Hero from "@/components/landingPage/hero/Hero";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center">
-        
-        <h1><br /><br />Hello world<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />h<br /><br /></h1>
+      <Hero />
     
     </main>
   );

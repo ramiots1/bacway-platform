@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "collab": "Collab",
+    "about": "About",
+    "login": "Log in"
+  },
+  "hero": {
+    "title": "Hello Future Bachelier!\n This is Your Way to BAC",
+    "year": "'{year}",
+    "subtitle": "Get to know BACWAY and dive into an ocean of resources assured by outstanding teachers and elite bacheliers to be one of them in the near future",
+    "subinfo": "+600 students from all around the country considered Bacway as an ultimate resource hub for high schoolers."
+  },
+  "footer": {
+    "madeWith": "Made with love in Algeria",
+    "general": "General",
+    "collaboration": "Collaboration",
+    "contact": "Contact us",
+    "home": "Home",
+    "about": "About",
+    "terms": "Our Terms & Conditions",
+    "collab": "Collab",
+    "instagram": "Instagram",
+    "email": "contact@bacway.dz",
+    "copyright": "© {year} Bacway. All rights reserved."
+  },
+  "auth": {
+    "createAccount": "Create an account",
+    "login": "Log in",
+    "emailPlaceholder": ""
+  },
+  "cards": {
+    "contribute": {
+      "title": "Share Your Knowledge. Shape Their Future.",
+      "subtitle": "Become part of a national community where students uplift each other by sharing real, useful BAC resources. Your uploads matter.",
+      "button": "Get Started",
+      "switch": "Student"
+    },
+    "collab": {
+      "title": "We’re Stronger When We Work Together",
+      "subtitle": "Clubs, teachers, startups, or initiatives. BACWAY is open for collabs that bring value to students. Let’s connect and make something big.",
+      "button": "Connect Now",
+      "switch": "Collaborator"
+    }
+  }
+}
+
