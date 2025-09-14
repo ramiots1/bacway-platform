@@ -9,7 +9,8 @@
     "title": "Hello Future Bachelier!\n This is Your Way to BAC",
     "year": "'{year}",
     "subtitle": "Get to know BACWAY and dive into an ocean of resources assured by outstanding teachers and elite bacheliers to be one of them in the near future",
-    "subinfo": "+600 students from all around the country considered Bacway as an ultimate resource hub for high schoolers."
+    "subinfo": "+600 students from all around the country considered Bacway as an ultimate resource hub for high schoolers.",
+    "more": "Together, we’re building a nationwide hub of collaboration and learning. Whether you’re a student aiming high or a partner sharing expertise, BACWAY connects you to a future shaped by knowledge."
   },
   "footer": {
     "madeWith": "Made with love in Algeria",
@@ -41,6 +42,28 @@
       "subtitle": "Clubs, teachers, startups, or initiatives. BACWAY is open for collabs that bring value to students. Let’s connect and make something big.",
       "button": "Connect Now",
       "switch": "Collaborator"
+    }
+  },
+  "library": {
+    "title": "Bacway Library",
+    "subtitle": "Explore a wide range of educational resources uploaded by former baccalaureate students. From recorded lessons to notes and past exams, we have everything you need to prepare for the BAC exam.",
+    "searchPlaceholder": "Search for resources...",
+    "filterLabel": "Filter by:",
+    "subject": "Subject",
+    "type": "Type",
+    "level": "Level",
+    "uploadButton": "Upload Resource",
+    "noResults": "No resources found.",
+    "loadMore": "Load More",
+    "loginForMore": "Log in for more resources >",
+    "noContributions": "No contributions yet.",
+    "divisions": {
+      "mathematics": "Mathematics Division",
+      "science": "Science Division", 
+      "technicalMath": "Technical Mathematics Division",
+      "management": "Management and Economics Division",
+      "languages": "Foreign Languages Division",
+      "literature": "Literature and Philosophy Division"
     }
   }
 }

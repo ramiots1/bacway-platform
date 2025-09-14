@@ -16,7 +16,7 @@ const ArtboardHero = () => {
       {/* Background */}
 
       {/* Cat */}
-      <div className={`absolute w-full md:h-[600px] h-[400px] overflow-visible top-[calc(250px)] ${locale === 'ar' ? '-left-[5%] md:left-25' : '-left-[10%] md:left-25'} md:top-10 z-30`}>
+      <div className={`absolute w-full md:h-[600px] h-[400px] overflow-visible top-[calc(250px)] ${locale === 'ar' ? '-left-[53%] md:left-25' : '-left-[10%] md:left-25'} md:top-10 z-30`}>
         <CatAnimation />
       </div>
       

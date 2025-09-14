@@ -70,7 +70,7 @@ const CatAnimation = () => {
     return { eyeX, eyeY, mouthCurve };
   };
 
-  const { eyeX, eyeY, mouthCurve } = calculateMovement();
+  const { eyeX, eyeY } = calculateMovement();
 
   return (
     <div 
@@ -120,7 +120,7 @@ const CatAnimation = () => {
         
         {/* Cat Mouth - W shape */}
         <path
-          d={`M545 ${200 + mouthCurve} Q550 ${205 + mouthCurve} 555 ${200 + mouthCurve} Q562 ${205 + mouthCurve} 566 ${200 + mouthCurve}`}
+          d={`M${545 + (eyeX / 2)} ${200 + (eyeY / 2)} Q${550 + (eyeX / 2)} ${205 +  (eyeY / 2)} ${555 + (eyeX / 2)} ${200 +  (eyeY / 2)} Q${562 + (eyeX / 2)} ${205 +  (eyeY / 2)} ${566 + (eyeX / 2)} ${200 +  (eyeY / 2)}`}
           stroke="black"
           strokeWidth="4"
           fill="none"

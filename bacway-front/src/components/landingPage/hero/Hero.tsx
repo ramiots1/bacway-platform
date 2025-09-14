@@ -8,6 +8,7 @@ import LogIn from '@/components/button/LogIn';
 import CardFrame from '@/components/cards/CardFrame';
 import Image from 'next/image';
 import background from '@/assets/artboardHero/bg.svg'
+import upShadow from '@/assets/artboardHero/upShadow.png'
 
 
 const Hero = () => {
@@ -49,11 +50,16 @@ const Hero = () => {
             </p>
         </div>
 
-        <div className="w-full mt-20 mb-10 flex justify-center px-5 md:px-0">
+        <div className="w-full mt-30 mb-20 flex flex-col items-center justify-center px-5 md:px-0">
             <CardFrame />
+            <p className="text-white/70 mt-10 w-80% md:w-[40%] "> {t('hero.more')} </p>
         </div>
         
-
+      <Image 
+        src={upShadow} 
+        alt="bacway Background" 
+        className="absolute -bottom-[50px] object-cover object-bottom -z-100"
+      />
     </section>
   )
 }

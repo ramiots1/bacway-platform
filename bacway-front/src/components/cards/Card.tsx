@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { StaticImageData } from 'next/image'
+import { useTranslation } from '@/i18n/TranslationProvider';
 
 interface CardProps {
   title: string
@@ -19,6 +20,8 @@ const Card: React.FC<CardProps> = ({
   onButtonClick,
   className = ""
 }) => {
+  const { locale } = useTranslation();
+
   return (
     <div className={`
       relative w-full h-full overflow-hidden rounded-2xl 
@@ -38,11 +41,11 @@ const Card: React.FC<CardProps> = ({
       {/* Content Overlay */}
       <div className="relative z-10 w-full h-full px-5 p-1 sm:p-5 md:p-4 flex flex-col justify-around">
         {/* Text Content - Left Side */}
-        <div className=" max-w-[70%] text-left">
+        <div className={`max-w-[90%] sm:max-w-[70%] md:max-w-[60%] ${locale === 'ar' ? 'text-right' : 'text-left'}`}>
           <h3 className="text-[100%] md:text-xl lg:text-xl font-bold text-white mb-1 md:mb-2 leading-tight transition-all duration-300 hover:text-blue-200">
             {title}
           </h3>
-          <p className="text-[70%] md:text-[90%] md:my-2 text-white/90 leading-relaxed transition-all duration-300 hover:text-white">
+          <p className={`text-[70%] md:my-2 text-white/90 leading-relaxed transition-all duration-300 hover:text-white`}>
             {subtitle}
           </p>
         </div>
