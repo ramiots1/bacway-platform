@@ -65,6 +65,31 @@
       "languages": "Foreign Languages Division",
       "literature": "Literature and Philosophy Division"
     }
+  },
+  "info": {
+    "lovedTitle": "Loved by Our Community",
+    "lovedSubtitle": "from students, to students",
+    "driveFolders": "Drive Folder",
+    "contributors": "Contributor",
+    "futureBachelier": "Future Bachelier Been Here",
+    "teachers" : "Teacher"
+  },
+  "invite": {
+    "title": "Invite a Contributor",
+    "introLine1": "If you know a student who has valuable resources, invite them to join the hub.",
+    "introLine2": "Enter an email and we'll send them a personal invite ✉️",
+    "emailPlaceholder": "contributor@example.com",
+    "sendButton": "Send Invite",
+    "sending": "Sending...",
+    "success": "Invitation email sent!",
+    "invalidEmail": "Please enter a valid email address.",
+    "error": "Failed to send invite. Try again.",
+    "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything.",
+    "shareIntro": "Prefer to send it yourself? Copy this custom invite link and send it via WhatsApp, Messenger, or Instagram DMs.",
+    "copy": "Copy Invitation",
+    "copied": "Copied!",
+    "copyError": "Copy failed. Manually select the link.",
+    "emailPreviewPlaceholder": "Email template preview coming soon"
   }
 }
 

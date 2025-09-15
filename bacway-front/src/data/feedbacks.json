@@ -1,0 +1,36 @@
+{
+  "feedbacks": [
+    {
+      "id": 1,
+      "name": "KERNOUF Rayane",
+      "role": "Co-founder ",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "testimonial": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel."
+    },
+    {
+      "id": 2,
+      "name": "OTSMANE Ahmed Rami",
+      "role": "Founder of Bacway",
+      "initials": "AR",
+      "image": "rami",
+      "testimonial": "Due to the countless questions we receive on social media by students asking for resources, I got the idea of creating this platform to be the place for them to find what they want. This platform is still considered as an experiment, so follow our socials to keep up to date to any updates."
+    },
+    {
+      "id": 3,
+      "name": "HADJI Sid Ali",
+      "role": "Co-founder",
+      "initials": "HS",
+      "image": "sidAli",
+      "testimonial": "Seeing students unite on Bacway proves our vision right. Every shared resource empowers thousands. Together, we're not just preparing for exams, we're shaping a culture of collaboration and success."
+    },
+    {
+      "id": 4,
+      "name": "DOUKHA Riad",
+      "role": "BAC 2024, Math 19.11",
+      "initials": "RD",
+      "image": "riadDoukha",
+      "testimonial": "Bacway is a game changer for campaign coordination. The templates and analytics helped us optimize spending and measure engagement quickly. Our cross-team planning is now centralized and way more effective."
+    }
+  ]
+}

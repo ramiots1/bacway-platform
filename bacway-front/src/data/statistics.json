@@ -1,0 +1,20 @@
+{
+  "statistics": {
+    "driveFolders": {
+      "value": 120,
+      "increment": 5
+    },
+    "contributors": {
+      "value": 45,
+      "increment": 2
+    },
+    "teachers": {
+      "value": 25,
+      "increment": 1
+    },
+    "futureBacheliers": {
+      "value": 650,
+      "increment": 15
+    }
+  }
+}
