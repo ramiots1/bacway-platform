@@ -78,18 +78,14 @@
     "title": "Invite a Contributor",
     "introLine1": "If you know a student who has valuable resources, invite them to join the hub.",
     "introLine2": "Enter an email and we'll send them a personal invite ✉️",
-    "emailPlaceholder": "contributor@example.com",
+    "emailPlaceholder": "Enter email",
     "sendButton": "Send Invite",
     "sending": "Sending...",
+    "emailNote": "We'll only use this email to send one invitation. No spam, ever.",
     "success": "Invitation email sent!",
     "invalidEmail": "Please enter a valid email address.",
     "error": "Failed to send invite. Try again.",
-    "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything.",
-    "shareIntro": "Prefer to send it yourself? Copy this custom invite link and send it via WhatsApp, Messenger, or Instagram DMs.",
-    "copy": "Copy Invitation",
-    "copied": "Copied!",
-    "copyError": "Copy failed. Manually select the link.",
-    "emailPreviewPlaceholder": "Email template preview coming soon"
+    "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything."
   }
 }
 

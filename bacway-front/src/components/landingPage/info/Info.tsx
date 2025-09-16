@@ -7,6 +7,7 @@ import { useTranslation } from '@/i18n/TranslationProvider';
 import infoEng from '@/assets/informational/infoEng.svg'
 import infoAr from '@/assets/informational/infoAr.svg'
 import upShadow from '@/assets/artboardHero/upShadow.png'
+import upShadowColorful from '@/assets/artboardHero/upShadowColorful.svg'
 
 import Feedbacks from './Feedbacks';
 import InNumbers from './InNumbers';
@@ -36,10 +37,15 @@ const Info = () => {
           <Image src={upShadow} alt="Bacway Shadow Decoration" layout="fill" objectFit="cover" className='absolute opacity-50 -z-0 object-bottom overflow-visible' />
         </div>
 
-        <div className=' w-full'>
+        <div className=' w-full relative' >
+          <div className='relative z-10'>
           <Feedbacks />
           <InNumbers />
           <InviteContributors />
+          </div>
+
+          <Image src={upShadowColorful} alt="Bacway Shadow Decoration" fill objectFit="contain" className='absolute opacity-50 -z-0 object-bottom overflow-visible' />
+
         </div>
 
     </div>

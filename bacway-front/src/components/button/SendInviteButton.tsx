@@ -1,27 +1,32 @@
+'use client';
+
 import React from 'react'
+import { useTranslation } from '@/i18n/TranslationProvider'
+
 
 interface SendInviteButtonProps {
   loading: boolean
   disabled?: boolean
   onClick: () => void
-  children?: React.ReactNode
 }
 
-const SendInviteButton: React.FC<SendInviteButtonProps> = ({ loading, disabled, onClick, children }) => {
+const SendInviteButton: React.FC<SendInviteButtonProps> = ({ loading, disabled, onClick }) => {
+
+  const { t } = useTranslation()
+
   return (
     <button
       onClick={onClick}
       disabled={disabled || loading}
-      className="h-12 px-6 rounded-md bg-white text-black font-semibold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+      className={`text-sm px-6 rounded-md transition-all duration-200 ${
+        loading
+          ? 'bg-blue-400 cursor-wait'
+          : disabled
+          ? 'bg-blue-300 cursor-not-allowed'
+          : 'hover:bg-blue-500 bg-blue-600'
+      } text-white`}
     >
-      {loading ? (
-        <span className="flex items-center gap-2">
-          <span className="inline-block w-4 h-4 border-2 border-black/40 border-t-black rounded-full animate-spin" />
-          <span>Sending...</span>
-        </span>
-      ) : (
-        children || 'Send Invite'
-      )}
+      {loading ? t('invite.sending') : t('invite.sendButton')}
     </button>
   )
 }

@@ -55,9 +55,6 @@ const CatAnimation = () => {
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     
     // Only animate when cursor is away from the cat
-    if (distance < 200) {
-      return { eyeX: 0, eyeY: 0, mouthCurve: 0 };
-    }
 
     // Limit eye movement range
     const maxEyeMovement = 9;
@@ -100,7 +97,7 @@ const CatAnimation = () => {
           ry="15"
           fill="black"
           style={{
-            transition: 'cx 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), cy 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            transition: 'cx 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), cy 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             willChange: 'transform'
           }}
         />
@@ -113,7 +110,7 @@ const CatAnimation = () => {
           ry="15"
           fill="black"
           style={{
-            transition: 'cx 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), cy 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            transition: 'cx 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), cy 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             willChange: 'transform'
           }}
         />
@@ -127,7 +124,7 @@ const CatAnimation = () => {
           strokeLinecap="round"
           strokeLinejoin="round"
           style={{
-            transition: 'd 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+            transition: 'd 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
             willChange: 'auto'
           }}
         />      </svg>
