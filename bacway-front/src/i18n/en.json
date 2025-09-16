@@ -25,6 +25,17 @@
     "email": "contact@bacway.dz",
     "copyright": "© {year} Bacway. All rights reserved."
   },
+  "about": {
+    "title": "We’re building the platform we wish we had during BAC",
+    "subtitle": "Bacway is a student-driven platform dedicated to providing high school students with access to quality educational resources. Founded by a group of passionate students, Bacway aims to create a collaborative community where students can share and access study materials, past exam papers, and other resources to help them succeed in their academic journey.",
+    "values": [
+      "Collaboration: We believe in the power of community and the importance of sharing knowledge.",
+      "Quality: We are committed to providing high-quality resources that meet the needs of our users.",
+      "Accessibility: We strive to make educational resources accessible to all students, regardless of their background or location.",
+      "Integrity: We uphold the highest standards of honesty and transparency in all our interactions."
+    ],
+    "version": "Let us know what you think"
+  },
   "auth": {
     "createAccount": "Create an account",
     "login": "Log in",

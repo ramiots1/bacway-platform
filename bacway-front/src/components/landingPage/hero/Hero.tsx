@@ -7,7 +7,6 @@ import ArtboardHero from './ArtboardHero';
 import LogIn from '@/components/button/LogIn';
 import CardFrame from '@/components/cards/CardFrame';
 import Image from 'next/image';
-import background from '@/assets/artboardHero/bg.svg'
 import upShadow from '@/assets/artboardHero/upShadow.png'
 
 
@@ -21,12 +20,16 @@ const Hero = () => {
     <section className="relative w-full h-auto pt-25 flex flex-col items-start justify-center text-center overflow-hidden">
       
       {/* Background Image */}
-      <Image 
-        src={background} 
-        alt="bacway Background" 
-        fill
-        className="absolute top-0 left-0 object-cover object-top -z-100"
-        priority
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-50 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle at 15% 30%, rgba(0,201,165,0.35), transparent 60%),
+                            radial-gradient(circle at 80% 25%, rgba(0,117,201,0.55), transparent 62%),
+                            radial-gradient(circle at 55% 70%, rgba(170,36,219,0.5), transparent 70%)`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover'
+        }}
       />
 
         <div className="w-full h-180 top-0 left-0 -z-50  pointer-events-none select-none absolute">
