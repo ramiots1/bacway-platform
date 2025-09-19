@@ -34,7 +34,9 @@
       "Accessibility: We strive to make educational resources accessible to all students, regardless of their background or location.",
       "Integrity: We uphold the highest standards of honesty and transparency in all our interactions."
     ],
-    "version": "Let us know what you think"
+    "version": "Let us know what you think",
+    "meetourteam": "MEET OUR TEAM",
+    "teamdescription": "The folks behind Bacway are elite students from prestigious higher institutions and universities."
   },
   "auth": {
     "createAccount": "Create an account",

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "rami",
+    "fullName": "Ahmed Rami OTSMANE",
+    "role": "Founder of Bacway",
+    "username": "rami",
+    "image": "rami.png",
+    "social": {
+      "instagram": "https://www.instagram.com/ramiots/",
+      "linkedin": "https://www.linkedin.com/in/ramiots/",
+      "behance": "https://www.behance.net/ramiotsmane/",
+      "github": "https://github.com/ramiots1"
+    }
+  },
+  {
+    "id": "sidali",
+    "fullName": "Sid Ali HADJI",
+    "role": "Co‑founder",
+    "username": "sidali",
+    "image": "sidAli.png",
+    "social": {
+      "instagram": "https://www.instagram.com/sidalikn1/",
+      "linkedin": "https://www.linkedin.com/in/hsidali1/",
+      "behance": "",
+      "github": "https://github.com/H-SidAli"
+    }
+  },
+  {
+    "id": "rayane",
+    "fullName": "Rayane Kernouf",
+    "role": "Co‑founder",
+    "username": "rayane",
+    "image": "rayaneKer.png",
+    "social": {
+      "instagram": "",
+      "linkedin": "https://www.linkedin.com/in/kernouf-rayane/",
+      "behance": "",
+      "github": ""
+    }
+  }
+  
+]

@@ -132,7 +132,7 @@ const NavbarPublic = () => {
                         <Link href="/about" className=" hover:text-gray-300 transition-colors" onClick={(e) => handleNavClick('/about', e)}>
                             <span suppressHydrationWarning>{t('nav.about')}</span>
                         </Link>
-                        <Link href="/login" className=" hover:text-gray-300 transition-colors border-1 rounded-2xl px-6 py-1" onClick={(e) => handleNavClick('/login', e)}>
+                        <Link href="/login" className=" hover:text-gray-300 transition-colors border-1 border-white/50 rounded-2xl px-6 py-1" onClick={(e) => handleNavClick('/login', e)}>
                             <span suppressHydrationWarning>{t('nav.login')}</span>
                         </Link>
                     </div>
@@ -190,7 +190,7 @@ const NavbarPublic = () => {
                         </Link>
                         <Link 
                             href="/login" 
-                            className=" hover:text-gray-300 border-1 w-35 rounded-2xl transition-colors text-center py-1"
+                            className=" hover:text-gray-300 border-1 border-white/50 w-35 rounded-2xl transition-colors text-center py-1"
                             onClick={(e) => handleNavClick('/login', e)}
                         >
                             <span suppressHydrationWarning>{t('nav.login')}</span>
