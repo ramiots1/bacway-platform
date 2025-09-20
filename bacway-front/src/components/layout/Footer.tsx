@@ -38,7 +38,7 @@ const Footer = () => {
                 <Link href="/about" className="hover:text-white transition-colors"><span suppressHydrationWarning>{t('footer.about')}</span></Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-white transition-colors"><span suppressHydrationWarning>{t('footer.terms')}</span></Link>
+                <Link href="/terms&conditions" className="hover:text-white transition-colors"><span suppressHydrationWarning>{t('footer.terms')}</span></Link>
               </li>
             </ul>
           </div>

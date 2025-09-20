@@ -100,5 +100,48 @@
     "error": "Failed to send invite. Try again.",
     "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything."
   }
+  ,
+  "terms": {
+    "title": "Our Terms and Conditions",
+    "intro": "Welcome to BACWAY. By creating an account and using our platform, you agree to comply with the following Terms and Conditions. Please read them carefully before using the platform.",
+    "definitions": {
+      "title": "Definitions",
+      "bacStudent": "\u201cBac Student\u201d refers to any learner using BACWAY resources.",
+      "contributor": "\u201cContributor\u201d refers to any user who shares educational content. Contributors are divided into:",
+      "teacherContributors": "Teacher Contributors: educators or mentors sharing verified material.",
+      "studentContributors": "Student Contributors: students sharing their notes, summaries, or exercises."
+    },
+    "registration": {
+      "title": "Account Registration",
+      "item1": "Users must provide accurate information when creating an account.",
+      "item2": "Accounts are personal and may not be shared or transferred.",
+      "item3": "Users are responsible for maintaining the confidentiality of their login credentials."
+    },
+    "duration": {
+      "title": "Account Duration & Inactivity",
+      "item1": "Contributors: If no contribution is posted within 3 months of opening the account, the account will be deleted automatically.",
+      "item2": "BACWAY reserves the right to suspend or delete accounts engaged in misconduct, including plagiarism, abuse, or violation of platform rules."
+    },
+    "content": {
+      "title": "Content Submission & Ownership",
+      "item1": "Contributors must only upload original content or content they have the right to share.",
+      "item2": "By posting content on BACWAY, contributors grant the platform a non-exclusive, royalty-free license to display, distribute, and adapt the material for educational use.",
+      "item3": "Plagiarized or inappropriate content will be removed, and the contributor’s account may be deleted."
+    },
+    "privacy": {
+      "title": "Privacy & Data Protection",
+      "item1": "BACWAY collects and stores personal information (e.g., name, email) only for account management and platform improvement.",
+      "item2": "User data will never be sold to third parties.",
+      "item3": "Accounts and associated data are deleted permanently once the account is closed."
+    },
+    "usage": {
+      "title": "Platform Usage",
+      "item1": "BACWAY is a free educational service. Commercial use of the platform without prior consent is prohibited.",
+      "item2": "Technical issues or downtime may occur, and BACWAY does not guarantee uninterrupted access.",
+      "item3": "Users must not attempt to hack, disrupt, or misuse the platform’s systems."
+    },
+    "changesNotice": "BACWAY reserves the right to update these Terms and Conditions at any time, users will be notified of significant changes through the platform or via email.",
+    "contact": "For any questions or concerns, please contact us at: "
+  }
 }
 
