@@ -1,4 +1,5 @@
-// src/app/api/send-email/route.ts
+// src/app/api/invite/route.ts
+export const runtime = 'nodejs';
 import { NextResponse } from "next/server";
 import { sendMail } from "@/lib/mailer";
 

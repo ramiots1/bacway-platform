@@ -86,7 +86,7 @@ const Terms: React.FC = () => {
           <section>
             <p className="text-white/80">
               {t('terms.contact')}
-              <a href="bacwaydz@gmail.com" className='underline'>bacwaydz@gmail.com</a>
+              <a href="mailto:bacwaydz@gmail.com" className='underline'>bacwaydz@gmail.com</a>
             </p>
           </section>
         </div>

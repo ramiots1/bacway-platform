@@ -111,15 +111,11 @@ const NavbarPublic = () => {
                         <Link href="/" className="flex items-center" onClick={handleLogoClick}>
                         <Image src="/bacwayLogoWhite.svg" alt="Logo" width={80} height={18} className="h-4.5" />
                         </Link>
-                        <div className="hidden md:block">
+                        <div className="block">
                         <LanguageSwitcher />
-                    </div>
+                        </div>
                     </div>
                     
-                    
-                    <div className="md:hidden">
-                        <LanguageSwitcher />
-                    </div>
                 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-6">
