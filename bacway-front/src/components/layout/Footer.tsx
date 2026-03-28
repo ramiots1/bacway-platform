@@ -38,11 +38,24 @@ const FOOTER_SECTIONS: FooterSection[] = [
   {
     titleKey: 'footer.contact',
     links: [
-      { href: 'https://instagram.com/bacway.dz', labelKey: 'footer.instagram', external: true },
-      { href: 'mailto:contact@bacway.dz',        labelKey: 'footer.email',     external: true },
+      { href: 'https://instagram.com/bacway.app', labelKey: 'footer.instagram', external: true },
+      { href: 'mailto:bacwaydz@gmail.com',        labelKey: 'footer.email',     external: true },
     ],
   },
 ];
+
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const LinkItem: React.FC<FooterLink & { t: (key: string) => string }> = ({ href, labelKey, external, t }) => {
+  const className = "text-sm text-gray-400 hover:text-white transition-colors duration-200"
+  const content = <span suppressHydrationWarning>{t(labelKey)}</span>
+
+  if (external) {
+    return <a href={href} target="_blank" rel="noreferrer" className={className}>{content}</a>
+  }
+  return <Link href={href} className={className}>{content}</Link>
+}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -72,13 +85,9 @@ const Footer: React.FC = () => {
                 <span suppressHydrationWarning>{t(titleKey)}</span>
               </h3>
               <ul className="space-y-2">
-                {links.map(({ href, labelKey, external }) => (
-                  <li key={href}>
-                    {
-                      <a href={href} target="_blank" rel="noreferrer" className="text-sm text-gray-200 hover:text-white font-light transition-colors duration-200">
-                        <span suppressHydrationWarning>{t(labelKey)}</span>
-                      </a>
-                    }
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <LinkItem {...link} t={t} />
                   </li>
                 ))}
               </ul>

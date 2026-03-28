@@ -43,7 +43,6 @@ const Team: React.FC = () => {
 							photo={imageMap[p.image]}
 							fullName={p.fullName}
 							role={p.role}
-							username={p.username}
 							social={p.social}
 						/>
 					))}
