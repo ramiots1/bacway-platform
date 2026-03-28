@@ -27,7 +27,7 @@ const Library = () => {
   const isRTL = locale === 'ar';
 
   return (
-    <div className=' w-full'>
+    <div className=' w-full relative z-50'>
       {/* Header Section */}
       <div className='flex flex-col items-center justify-center py-10 px-0'>
         <Image src="/bacwayLibrary.svg" alt="Bacway Library Logo" width={100} height={100} className=' h-25 md:h-30' />

@@ -1,201 +1,212 @@
-
 "use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '@/i18n/TranslationProvider';
 import LanguageSwitcher from '@/i18n/LanguageSwitcher';
 
-const NavbarPublic = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement | null>(null);
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
-    const { t } = useTranslation();
-    const pathname = usePathname();
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-    const scrollToTop = (e: React.MouseEvent) => {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        setIsMenuOpen(false);
-    };
-
-    // Smart navigation handler for logo
-    const handleLogoClick = (e: React.MouseEvent) => {
-        if (pathname === '/') {
-            // On landing page - scroll to top
-            scrollToTop(e);
-        } else {
-            // On other pages - navigate to home
-            setIsMenuOpen(false);
-        }
-    };
-
-    // Smart navigation handler for nav links
-    const handleNavClick = (targetPath: string, e: React.MouseEvent) => {
-        if (pathname === targetPath) {
-            // Same page - scroll to top
-            scrollToTop(e);
-        } else {
-            // Different page - allow normal navigation
-            setIsMenuOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // Close mobile menu when clicking/tapping outside of it.
-    // Use click/touchend and composedPath for more reliable detection and to avoid
-    // racing with the button's click handler.
-    useEffect(() => {
-        const handleOutsideClick = (e: Event) => {
-            if (!isMenuOpen) return;
-            const ev = e as Event & { composedPath?: () => EventTarget[], path?: EventTarget[] };
-            const path: EventTarget[] = ev.composedPath ? ev.composedPath() : (ev.path || []);
-            // If composedPath is not available, fall back to target containment checks
-            if (path && path.length) {
-                if (menuRef.current && path.includes(menuRef.current)) return;
-                if (buttonRef.current && path.includes(buttonRef.current)) return;
-                setIsMenuOpen(false);
-                return;
-            }
-
-            const target = e.target as Node | null;
-            if (!target) return;
-            if (menuRef.current && menuRef.current.contains(target)) return;
-            if (buttonRef.current && buttonRef.current.contains(target)) return;
-            setIsMenuOpen(false);
-        };
-
-        document.addEventListener('click', handleOutsideClick);
-        document.addEventListener('touchend', handleOutsideClick);
-        return () => {
-            document.removeEventListener('click', handleOutsideClick);
-            document.removeEventListener('touchend', handleOutsideClick);
-        };
-    }, [isMenuOpen]);
-
-    return (
-        <nav className="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-[calc(100%-5rem)] max-w-7xl top-5 z-100">
-            {/* Desktop and Mobile Navbar - Stretches down when menu opens */}
-            <div className={`relative backdrop-blur-sm w-full transition-all duration-500 ease-out z-100 overflow-hidden
-                ${isScrolled 
-                    ? 'bg-black md:bg-black/60' 
-                    : 'bg-black md:bg-transparent'
-                }
-                ${isMenuOpen 
-                    ? 'rounded-4xl' // Fully rounded when menu is open (top and bottom)
-                    : 'rounded-4xl h-16' // Full rounded when menu is closed
-                }
-            `}>
-                
-                {/* Top navbar section */}
-                <div className="flex h-16 w-full items-center justify-between px-8 md:px-10">
-                    <div className='flex items-center gap-4'>
-                        <Link href="/" className="flex items-center" onClick={handleLogoClick}>
-                        <Image src="/bacwayLogoWhite.svg" alt="Logo" width={80} height={18} className="h-4.5" />
-                        </Link>
-                        <div className="block">
-                        <LanguageSwitcher />
-                        </div>
-                    </div>
-                    
-                
-                    {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center gap-6">
-                        <Link href="/" className="hover:text-gray-300 transition-colors" onClick={(e) => handleNavClick('/', e)}>
-                            <span suppressHydrationWarning>{t('nav.home')}</span>
-                        </Link>
-                        <Link href="/collabs" className=" hover:text-gray-300 transition-colors" onClick={(e) => handleNavClick('/collabs', e)}>
-                            <span suppressHydrationWarning>{t('nav.collab')}</span>
-                        </Link>
-                        <Link href="/about" className=" hover:text-gray-300 transition-colors" onClick={(e) => handleNavClick('/about', e)}>
-                            <span suppressHydrationWarning>{t('nav.about')}</span>
-                        </Link>
-                        <Link href="/login" className=" hover:text-gray-300 transition-colors border-1 border-white/50 rounded-2xl px-6 py-1" onClick={(e) => handleNavClick('/login', e)}>
-                            <span suppressHydrationWarning>{t('nav.login')}</span>
-                        </Link>
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <button 
-                        ref={buttonRef}
-                        aria-expanded={isMenuOpen}
-                        aria-controls="mobile-menu"
-                        className="md:hidden p-2 relative w-10 h-10 text-white"
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            e.stopPropagation();
-                            setIsMenuOpen(prev => !prev);
-                        }}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
-                    >
-                        <div className=" w-6 h-4 transform transition-all duration-300 ">
-                            <span className={`absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${isMenuOpen ? 'rotate-45 translate-y-2.5' : 'translate-y-0'}`} />
-                            <span className={`absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out translate-y-2 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
-                            <span className={`absolute h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 translate-y-2.5' : 'translate-y-4'}`} />
-                        </div>
-                    </button>
-                </div>
-
-                {/* Mobile Menu - Integrated as part of navbar stretch */}
-                <div id="mobile-menu" ref={menuRef} className={`transition-all duration-600 ease-in-out md:hidden transform origin-top overflow-hidden
-                    ${isMenuOpen 
-                        ? 'max-h-80 opacity-100 pointer-events-auto scale-y-100' 
-                        : 'max-h-0 opacity-0 pointer-events-none scale-y-95'
-                    }`}>
-                    <div className={`flex flex-col items-center py-4 space-y-4 transition-all duration-500 ease-in-out
-                        ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}
-                    `}>
-                        <Link 
-                            href="/" 
-                            className="hover:text-gray-300 transition-colors w-full text-center py-2"
-                            onClick={(e) => handleNavClick('/', e)}
-                        >
-                            <span suppressHydrationWarning>{t('nav.home')}</span>
-                        </Link>
-                        <Link 
-                            href="/collabs" 
-                            className=" hover:text-gray-300 transition-colors w-full text-center py-2"
-                            onClick={(e) => handleNavClick('/collabs', e)}
-                        >
-                            <span suppressHydrationWarning>{t('nav.collab')}</span>
-                        </Link>
-                        <Link 
-                            href="/about" 
-                            className=" hover:text-gray-300 transition-colors w-full text-center py-2"
-                            onClick={(e) => handleNavClick('/about', e)}
-                        >
-                            <span suppressHydrationWarning>{t('nav.about')}</span>
-                        </Link>
-                        <Link 
-                            href="/login" 
-                            className=" hover:text-gray-300 border-1 border-white/50 w-35 rounded-2xl transition-colors text-center py-1"
-                            onClick={(e) => handleNavClick('/login', e)}
-                        >
-                            <span suppressHydrationWarning>{t('nav.login')}</span>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    )
+interface NavLink {
+  href: string;
+  labelKey: string;
 }
 
-export default NavbarPublic
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const NAV_LINKS: NavLink[] = [
+  { href: '/',        labelKey: 'nav.home'    },
+  { href: '/about',    labelKey: 'nav.about'    },
+  { href: '/library', labelKey: 'nav.library' },
+];
+
+const SCROLL_THRESHOLD = 50;
+
+// ─── Hooks ────────────────────────────────────────────────────────────────────
+
+const useScrolled = (threshold = SCROLL_THRESHOLD) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > threshold);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [threshold]);
+
+  return isScrolled;
+};
+
+const useOutsideClick = (
+  refs: React.RefObject<HTMLElement | null>[],
+  active: boolean,
+  onOutside: () => void
+) => {
+  useEffect(() => {
+    if (!active) return;
+
+    const handler = (e: Event) => {
+      const path: EventTarget[] =
+        (e as any).composedPath?.() ?? (e as any).path ?? [];
+
+      const isInside = refs.some((ref) =>
+        path.length
+          ? ref.current && path.includes(ref.current)
+          : ref.current?.contains(e.target as Node)
+      );
+
+      if (!isInside) onOutside();
+    };
+
+    document.addEventListener('click', handler);
+    document.addEventListener('touchend', handler);
+    return () => {
+      document.removeEventListener('click', handler);
+      document.removeEventListener('touchend', handler);
+    };
+  }, [refs, active, onOutside]);
+};
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+const HamburgerIcon: React.FC<{ isOpen: boolean }> = ({ isOpen }) => (
+  <div className="w-6 h-4 relative">
+    <span className={`absolute h-0.5 w-6 bg-current transition-all duration-300 ease-in-out
+      ${isOpen ? 'rotate-45 translate-y-2.5' : 'translate-y-0'}`}
+    />
+    <span className={`absolute h-0.5 w-6 bg-current transition-all duration-300 ease-in-out translate-y-2
+      ${isOpen ? 'opacity-0' : 'opacity-100'}`}
+    />
+    <span className={`absolute h-0.5 w-6 bg-current transition-all duration-300 ease-in-out
+      ${isOpen ? '-rotate-45 translate-y-2.5' : 'translate-y-4'}`}
+    />
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
+const NavbarPublic: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef  = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const isScrolled = useScrolled();
+  const pathname   = usePathname();
+  const { t }      = useTranslation();
+
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+
+  useOutsideClick([menuRef, buttonRef as React.RefObject<HTMLElement>], isMenuOpen, closeMenu);
+
+  // Scroll to top if already on the target page, otherwise navigate normally
+  const handleNavClick = useCallback(
+    (targetPath: string, e: React.MouseEvent) => {
+      if (pathname === targetPath) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      closeMenu();
+    },
+    [pathname, closeMenu]
+  );
+
+  return (
+    <nav
+      aria-label="Main navigation"
+      className="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-[calc(100%-5rem)] max-w-7xl top-5 z-100"
+    >
+      <div className={`
+        relative w-full backdrop-blur-sm transition-all duration-500 ease-out overflow-hidden rounded-4xl
+        ${isMenuOpen ? '' : 'h-16'}
+        ${isScrolled ? 'bg-black md:bg-black/60' : 'bg-black md:bg-transparent'}
+      `}>
+
+        {/* ── Top bar ── */}
+        <div className="flex h-16 items-center justify-between px-8 md:px-10">
+
+          {/* Logo + Language */}
+          <div className="flex items-center gap-4">
+            <Link href="/" onClick={(e) => handleNavClick('/', e)}>
+              <Image src="/bacwayLogoWhite.svg" alt="Bacway" width={80} height={18} className="h-4.5" />
+            </Link>
+            <LanguageSwitcher />
+          </div>
+
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-6 text-sm">
+            {NAV_LINKS.map(({ href, labelKey }) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-white/80 hover:text-white transition-colors duration-200"
+                onClick={(e) => handleNavClick(href, e)}
+              >
+                <span suppressHydrationWarning>{t(labelKey)}</span>
+              </Link>
+            ))}
+
+            {/* Contribute CTA */}
+            <Link
+              href="/contribute"
+              className="text-white border border-white/40 hover:border-white/80 hover:bg-white/5 rounded-2xl px-5 py-1.5 transition-all duration-200"
+              onClick={(e) => handleNavClick('/contribute', e)}
+            >
+              <span suppressHydrationWarning>{t('nav.contribute')}</span>
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            ref={buttonRef}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label="Toggle menu"
+            className="md:hidden p-2 w-10 h-10 text-white flex items-center justify-center"
+            onClick={(e) => { e.stopPropagation(); setIsMenuOpen((prev) => !prev); }}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
+          >
+            <HamburgerIcon isOpen={isMenuOpen} />
+          </button>
+        </div>
+
+        {/* ── Mobile menu ── */}
+        <div
+          id="mobile-menu"
+          ref={menuRef}
+          className={`md:hidden transition-all duration-500 ease-in-out overflow-hidden origin-top
+            ${isMenuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'}
+          `}
+        >
+          <div className={`flex flex-col items-center py-4 gap-4 transition-all duration-500
+            ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}
+          `}>
+            {NAV_LINKS.map(({ href, labelKey }) => (
+              <Link
+                key={href}
+                href={href}
+                className="w-full text-center py-2 text-white/80 hover:text-white transition-colors"
+                onClick={(e) => handleNavClick(href, e)}
+              >
+                <span suppressHydrationWarning>{t(labelKey)}</span>
+              </Link>
+            ))}
+
+            {/* Contribute CTA */}
+            <Link
+              href="/contribute"
+              className="border border-white/40 rounded-2xl px-8 py-1.5 text-white hover:bg-white/5 transition-all duration-200"
+              onClick={(e) => handleNavClick('/contribute', e)}
+            >
+              <span suppressHydrationWarning>{t('nav.contribute')}</span>
+            </Link>
+          </div>
+        </div>
+
+      </div>
+    </nav>
+  );
+};
+
+export default NavbarPublic;

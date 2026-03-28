@@ -1,9 +1,9 @@
 {
   "nav": {
     "home": "Home",
-    "collab": "Collab",
+    "library": "Library",
     "about": "About",
-    "login": "Log in"
+    "contribute": "Contribute"
   },
   "hero": {
     "title": "Hello Future Bachelier!\n This is Your Way to BAC",
@@ -47,7 +47,7 @@
     "contribute": {
       "title": "Share Your Knowledge. Shape Their Future.",
       "subtitle": "Become part of a national community where students uplift each other by sharing real, useful BAC resources. Your uploads matter.",
-      "button": "Get Started",
+      "button": "Become a Contributor",
       "switch": "Student"
     },
     "collab": {
@@ -81,7 +81,7 @@
   },
   "info": {
     "lovedTitle": "Loved by Our Community",
-    "lovedSubtitle": "from students, to students",
+    "lovedSubtitle": "by students, to students",
     "driveFolders": "Drive Folder",
     "contributors": "Contributor",
     "futureBachelier": "Future Bachelier Been Here",
@@ -95,10 +95,11 @@
     "sendButton": "Send Invite",
     "sending": "Sending...",
     "emailNote": "We'll only use this email to send one invitation. No spam, ever.",
-    "success": "Invitation email sent!",
+    "successMessage": "Invitation email sent!",
     "invalidEmail": "Please enter a valid email address.",
     "error": "Failed to send invite. Try again.",
-    "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything."
+    "privacy": "We’ll only use this to send one invitation. They won’t be subscribed to anything.",
+    "notePlaceholder": "Tell us about them"
   }
   ,
   "terms": {
@@ -142,6 +143,13 @@
     },
     "changesNotice": "BACWAY reserves the right to update these Terms and Conditions at any time, users will be notified of significant changes through the platform or via email.",
     "contact": "For any questions or concerns, please contact us at: "
+  },
+  "contributorDiscription" : {
+    "roles": {
+      "founder of bacway": "Founder of Bacway",
+      "cofounder": "Co-Founder",
+      "contributor": "Contributor"
+    }
   }
 }
 

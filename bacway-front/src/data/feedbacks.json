@@ -3,34 +3,104 @@
     {
       "id": 1,
       "name": "KERNOUF Rayane",
-      "role": "Co-founder ",
+      "role": "founder of bacway",
+      "bacyear": "2024",
+      "bacdivision": "mathematics",
+      "grade": "19.11",
       "initials": "KR",
       "image": "rayaneKer",
-      "testimonial": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel."
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel.",
+      "contact": {
+        "instagram": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "email": "kj"
+      }
     },
     {
       "id": 2,
-      "name": "OTSMANE Ahmed Rami",
-      "role": "Founder of Bacway",
-      "initials": "AR",
-      "image": "rami",
-      "testimonial": "Due to the countless questions we receive on social media by students asking for resources, I got the idea of creating this platform to be the place for them to find what they want. This platform is still considered as an experiment, so follow our socials to keep up to date to any updates."
+      "name": "KERNOUF Rayane",
+      "role": "cofounder",
+      "bacyear": "2024",
+      "bacdivision": "mathematics",
+      "grade": "19.11",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel potentiel.",
+      "contact": {
+        "instagram": "",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "",
+        "email": "hi"
+      }
     },
     {
       "id": 3,
-      "name": "HADJI Sid Ali",
-      "role": "Co-founder",
-      "initials": "HS",
-      "image": "sidAli",
-      "testimonial": "Seeing students unite on Bacway proves our vision right. Every shared resource empowers thousands. Together, we're not just preparing for exams, we're shaping a culture of collaboration and success."
+      "name": "KERNOUF Rayane",
+      "role": "cofounder",
+      "bacyear": "2024",
+      "bacdivision": "mathematics",
+      "grade": "19.11",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel.",
+      "contact": {
+        "instagram": "",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "",
+        "email": "hi"
+      }
     },
     {
       "id": 4,
-      "name": "DOUKHA Riad",
-      "role": "BAC 2024, Math 19.11",
-      "initials": "RD",
-      "image": "riadDoukha",
-      "testimonial": "Bacway is a game changer for campaign coordination. The templates and analytics helped us optimize spending and measure engagement quickly. Our cross-team planning is now centralized and way more effective."
+      "name": "KERNOUF Rayane",
+      "role": "cofounder",
+      "bacyear": "2024",
+      "bacdivision": "mathematics",
+      "grade": "19.11",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel.",
+      "contact": {
+        "instagram": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "email": "kj"
+      }
+    },
+    {
+      "id": 5,
+      "name": "KERNOUF Rayane",
+      "role": "cofounder",
+      "bacyear": "2024",
+      "bacdivision": "management",
+      "grade": "19.11",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel.",
+      "contact": {
+        "instagram": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "email": "kj"
+      }
+    },
+    {
+      "id": 6,
+      "name": "KERNOUF Rayane",
+      "role": "cofounder",
+      "bacyear": "2024",
+      "bacdivision": "management",
+      "grade": "19.11",
+      "initials": "KR",
+      "image": "rayaneKer",
+      "letter": "J'ai co-fondé Bacway, une plateforme qui célèbre les parcours exceptionnels et fournit aux étudiants les ressources et l'accompagnement nécessaires pour atteindre leur plein potentiel.",
+      "contact": {
+        "instagram": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "linkedin": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "facebook": "https://www.linkedin.com/in/rayane-kernouf-9b1a4b1b8/",
+        "email": "kj"
+      }
     }
   ]
 }

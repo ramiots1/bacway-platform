@@ -13,18 +13,18 @@ const CardFrame = () => {
   const { t } = useTranslation()
 
   const handleContributeClick = () => {
-    router.push('/login')
+    router.push('/contribute')
   }
 
   const handleCollabClick = () => {
-    router.push('/collabs')
+    router.push('/about')
   }
 
   const cards = {
     contribute: {
       title: t('cards.contribute.title') || 'Contribute',
       subtitle: t('cards.contribute.subtitle') || 'Join our community and contribute to exciting projects. Share your skills and make an impact.',
-      buttonText: t('cards.contribute.button') || 'Get Started',
+      buttonText: t('cards.contribute.button') || 'Contribute',
       background: badgeCard,
       onClick: handleContributeClick 
 
@@ -32,7 +32,7 @@ const CardFrame = () => {
     collab: {
       title: t('cards.collab.title') || 'Collaborate',
       subtitle: t('cards.collab.subtitle') || 'Find amazing collaborators and work together on innovative projects.',
-      buttonText: t('cards.collab.button') || 'Explore Collabs',
+      buttonText: t('cards.collab.button') || 'Connect',
         background: partnerCard,
       onClick: handleCollabClick
     }
@@ -94,14 +94,14 @@ const CardFrame = () => {
       </div>
 
       {/* Switch Controls */}
-      <div className="flex w-80 p-2 px-12 border border-white/40 rounded-full items-center justify-between">
+      <div className="flex w-80 p-2 px-12 border gap-5 border-white/40 rounded-full items-center justify-between">
         <button
           onClick={() => setActiveCard('contribute')}
           className={`
-             py-1 w-25 rounded-full font-medium transition-all duration-300
+             py-1 w-30 rounded-full font-medium transition-all duration-300
             ${activeCard === 'contribute'
-              ? 'bg-white text-gray-900 shadow-lg scale-105'
-              : 'bg-transparent text-white hover:bg-white/30'
+              ? 'bg-white text-gray-900 shadow-lg'
+              : 'bg-transparent text-white/80 hover:bg-white/30'
             }
           `}
         >
@@ -112,10 +112,10 @@ const CardFrame = () => {
         <button
           onClick={() => setActiveCard('collab')}
           className={`
-             py-1 w-25 rounded-full font-medium transition-all duration-300
+             py-1 w-40 rounded-full font-medium transition-all duration-300
             ${activeCard === 'collab'
-              ? 'bg-white text-gray-900 shadow-lg scale-105'
-              : 'bg-transparent text-white hover:bg-white/30'
+              ? 'bg-white text-gray-900 shadow-lg'
+              : 'bg-transparent text-white/80 hover:bg-white/30'
             }
           `}
         >

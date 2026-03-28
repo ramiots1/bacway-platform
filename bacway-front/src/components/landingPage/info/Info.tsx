@@ -18,26 +18,6 @@ const Info = () => {
 
   return (
     <div className=' w-full flex flex-col items-center'>
-        <div className="flex max-w-4xl my-20 not-md:mb-15 flex-col items-center justify-between z-10">
-        {locale === 'ar' ? (
-            <div className="md:w-[90%] p-4">
-              <Image
-                src={infoAr}
-                alt={t('info.arabic')}
-                className="w-full h-auto"
-                priority
-              />
-            </div>
-        ) : (
-            <div className="md:w-[90%] p-4">
-              <Image
-                src={infoEng}
-                alt={t('info.english')}
-                className="w-full h-auto"
-                priority
-              />
-            </div>
-        )}</div>
 
         <div className=' w-full h-25 relative overflow-visible'>
           <div className=" absolute flex flex-col text-left w-full px-5 md:px-15 z-1">

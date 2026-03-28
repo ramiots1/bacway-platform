@@ -44,11 +44,7 @@ const Hero = () => {
             <p suppressHydrationWarning className="mt-4 text-2xl md:text-2xl text-white/90">
             {t('hero.subtitle', { year: shortYear })}
             </p>
-            <br />
-            <br />
-            <LogIn />
-            <br />
-            <p suppressHydrationWarning className="mt-4 text-lg md:text-lg text-gray-300">
+            <p suppressHydrationWarning className="mt-6 text-lg md:text-lg text-gray-300">
             {t('hero.subinfo')}
             </p>
         </div>
