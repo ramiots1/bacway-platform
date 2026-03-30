@@ -116,7 +116,7 @@ const ContributePage: React.FC = () => {
   const { t } = useTranslation();
 
   const [mode,     setMode]     = useState<Mode>('contribute');
-  const [status,   setStatus]   = useState<Status>('success');
+  const [status,   setStatus]   = useState<Status>('idle');
   const [errMsg,   setErrMsg]   = useState('');
   const [info,     setInfo]     = useState<PersonalInfo>(EMPTY_INFO);
   const [contacts, setContacts] = useState<ContactRow[]>([EMPTY_CONTACT()]);
