@@ -41,7 +41,7 @@ const Hero = () => {
             <h1 suppressHydrationWarning className="text-4xl md:text-5xl font-bold text-white leading-tight">
             {t('hero.title')}<span className="text-neutral-400">{t('hero.year', { year: shortYear })}</span>
             </h1>
-            <p suppressHydrationWarning className="mt-4 text-2xl md:text-2xl text-white/90">
+            <p suppressHydrationWarning className="mt-4 text-xl md:text-2xl text-white/90">
             {t('hero.subtitle', { year: shortYear })}
             </p>
             <p suppressHydrationWarning className="mt-6 text-lg md:text-lg text-gray-300">
@@ -49,7 +49,7 @@ const Hero = () => {
             </p>
         </div>
 
-        <div className="w-full mt-30 mb-20 flex flex-col items-center justify-center px-5 md:px-0">
+        <div className="w-full mt-15 md:mt-30 mb-20 flex flex-col items-center justify-center px-5 md:px-0">
             <CardFrame />
             <p className="text-white/70 mt-10 w-80% md:w-[40%] "> {t('hero.more')} </p>
         </div>

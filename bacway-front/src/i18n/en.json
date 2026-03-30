@@ -8,7 +8,7 @@
   "hero": {
     "title": "Hello Future Bachelier!\n This is Your Way to BAC",
     "year": "'{year}",
-    "subtitle": "Get to know BACWAY and dive into an ocean of resources assured by outstanding teachers and elite bacheliers to be one of them in the near future",
+    "subtitle": "Get to know BACWAY and dive into an ocean of resources assured by outstanding bacheliers to be one of them in the near future",
     "subinfo": "+600 students from all around the country considered Bacway as an ultimate resource hub for high schoolers.",
     "more": "Together, we’re building a nationwide hub of collaboration and learning. Whether you’re a student aiming high or a partner sharing expertise, BACWAY connects you to a future shaped by knowledge."
   },
@@ -77,7 +77,22 @@
       "management": "Management and Economics Division",
       "languages": "Foreign Languages Division",
       "literature": "Literature and Philosophy Division"
-    }
+    },
+    
+  "allYears": "All Years",
+  "filterAll": "All",
+  "filterResources": "Resources",
+  "filterLetters": "Letters",
+  "results": "results",
+  "clearFilters": "Clear filters",
+  "ctaText": "Have resources to share with the next generation?",
+  "ctaButton": "Become a Contributor",
+  "card": {
+    "folders": "folders",
+    "letter": "Letter",
+    "letterLabel": "Letter",
+    "resources": "Resources"
+  }
   },
   "info": {
     "lovedTitle": "Loved by Our Community",
@@ -150,6 +165,75 @@
       "cofounder": "Co-Founder",
       "contributor": "Contributor"
     }
+  },
+  "contribute": {
+  "hero": {
+    "title": "Join Our Contributors Hub",
+    "subtitle": "Become part of a national community where students uplift each other by sharing real, useful BAC resources. Your uploads matter in shaping their future."
+  },
+  "personal": {
+    "title": "Personal Information",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your full name",
+    "email": "Email Address",
+    "emailPlaceholder": "you@gmail.com",
+    "bacYear": "BAC Year",
+    "bacYearPlaceholder": "e.g. 2024",
+    "grade": "Grade / Score",
+    "gradePlaceholder": "e.g. 18.5",
+    "division": "BAC Division",
+    "divisionPlaceholder": "Select your division"
+  },
+  "contact": {
+    "title": "Contact Information",
+    "subtitle": "Up to 3 contact methods",
+    "add": "+ Add Contact",
+    "handlePlaceholder": "@handle or profile URL"
+  },
+  "mode": {
+    "contribute": "Contribute",
+    "letter": "Leave a Letter"
+  },
+  "drives": {
+    "title": "Drive Folders / Links",
+    "subtitle": "Share your Google Drive folders or any resource links",
+    "add": "+ Add Link",
+    "remove": "Remove",
+    "namePlaceholder": "Folder name (e.g. Math Pack 2024)",
+    "urlPlaceholder": "https://drive.google.com/...",
+    "descriptionPlaceholder": "Description",
+    "maxReached": "Max 4 reached",
+    "foldersUsed": "folders used"
+  },
+  "picture": {
+    "title": "Your Picture",
+    "subtitle": "Recommended file size less than 5 MB",
+    "upload": "Upload"
+  },
+  "letter": {
+    "title": "Your Letter",
+    "subtitle": "Write a message to future BAC students. Introduce yourself, share your experience, and motivate them.",
+    "placeholder": "Dear future BAC students,\n\nI want to share with you...",
+    "characters": "characters"
+  },
+  "submit": {
+    "contribute": "Submit Contribution",
+    "letter": "Submit",
+    "loading": "Submitting…",
+    "note": "Your contribution will be reviewed by our team before being published to the library."
+  },
+  "success": {
+    "titleContribute": "Contribution Submitted!",
+    "titleLetter": "Letter Submitted!",
+    "thankYou": "Thank you, {name}! Your {type} has been submitted and is under review by our team.",
+    "typeContribution": "contribution",
+    "typeLetter": "letter",
+    "getBack": "We'll get back to you at",
+    "onceReviewed": "once reviewed.",
+    "submitAnother": "Submit Another",
+    "browseLibrary": "Browse Library"
   }
+  }
+
 }
 
