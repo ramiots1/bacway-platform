@@ -94,7 +94,7 @@ export function RejectModal({ type = 'contribution', onConfirm, onCancel }: Reje
                 <br />
                 <span style={{ color: '#aaa' }}><strong>Reason:</strong> {reason}</span><br />
                 <br />
-                You're welcome to make the necessary adjustments and re-submit. We appreciate your contribution to the BAC community.
+                You&apos;re welcome to make the necessary adjustments and re-submit. We appreciate your contribution to the BAC community.
               </p>
             </div>
           )}
