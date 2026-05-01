@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import upShadowColorful from '@/assets/artboardHero/upShadowColorful.png';
 import { useTranslation } from '@/i18n/TranslationProvider';
+import api from '@/app/api/axios';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -158,24 +159,49 @@ const ContributePage: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!isValid() || status === 'loading') return;
-    setStatus('loading'); setErrMsg('');
+    setStatus('loading');
+    setErrMsg('');
+
     try {
-      const body = new FormData();
-      body.append('mode',     mode);
-      body.append('info',     JSON.stringify(info));
-      body.append('contacts', JSON.stringify(contacts.filter(c => c.handle.trim())));
-      if (mode === 'contribute') {
-        body.append('drives', JSON.stringify(drives.filter(d => d.url.trim())));
-      } else {
-        body.append('letter', letter);
-        if (picture) body.append('picture', picture);
-      }
-      const res  = await fetch('/api/contribute', { method: 'POST', body });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Submission failed');
+      const payload = {
+        email: info.email,
+        fullName: info.fullName,
+        bacYear: parseInt(info.bacYear, 10),
+        bacSpeciality: ({
+          mathematics:   'MATHS',
+          science:       'SCIENCE',
+          technicalMath: 'MATH_TECH',
+          management:    'GESTION',
+          literature:    'LETTRE',
+          languages:     'LANGUES',
+        })[info.division] ?? info.division.toUpperCase(),
+        grade: info.grade ? parseFloat(info.grade) : null,
+        letter: mode === 'letter' ? letter : null,
+        contacts: contacts
+          .filter(c => c.handle.trim())
+          .map(c => ({
+            type: ({
+              Instagram: 'INSTAGRAM',
+              Facebook: 'FACEBOOK',
+              LinkedIn: 'LINKEDIN',
+              Other: 'OTHER',
+            })[c.platform] || c.platform.toUpperCase(),
+            contact: c.handle,
+          })),
+        resources: drives
+          .filter(d => d.url.trim())
+          .map(d => ({
+            folderName: d.name,
+            folderLink: d.url,
+            description: d.description,
+          })),
+      };
+
+      await api.post('', payload);
       setStatus('success');
     } catch (err: any) {
-      setErrMsg(err.message ?? 'Something went wrong');
+      const message = err.response?.data?.error || err.response?.data?.message || err.message || 'Submission failed';
+      setErrMsg(message);
       setStatus('error');
     }
   };
