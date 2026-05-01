@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react'
-import { useTranslation } from '@/i18n/TranslationProvider'
+import React from 'react'     // import react from react library 
+import { useTranslation } from '@/i18n/TranslationProvider'   
 import Image from 'next/image'
-import algeriaBacway from '@/assets/artboardHero/algeriaBacway.svg'
+import algeriaBacway from '@/assets/artboardHero/algeriaBacway.svg'  
 import version from '@/assets/version.svg'
 
 const Hero = () => {

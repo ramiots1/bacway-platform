@@ -96,7 +96,7 @@ const Library = () => {
                         }`}
                         onClick={() => {
                           // Redirect to login page
-                          window.location.href = '/login';
+                          window.location.href = '/library';
                         }}
                       >
                         {t('library.loginForMore')}
