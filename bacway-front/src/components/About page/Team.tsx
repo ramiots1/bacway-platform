@@ -6,6 +6,7 @@ import people from '@/data/people.json'
 import ramiImg from '@/data/people/rami.png'
 import rayaneImg from '@/data/people/rayaneKer.png'
 import sidaliImg from '@/data/people/sidAli.png'
+import naderImg from '@/data/people/nader.png'
 
 import { useTranslation } from '@/i18n/TranslationProvider'
 
@@ -27,6 +28,7 @@ const imageMap: Record<string, any> = {
 	'rami.png': ramiImg,
 	'rayaneKer.png': rayaneImg,
 	'sidAli.png': sidaliImg,
+	'nader.png': naderImg,
 }
 
 const Team: React.FC = () => {
@@ -36,7 +38,7 @@ const Team: React.FC = () => {
 			<div className="max-w-6xl mx-auto px-6 text-center">
 						<h2 className="text-2xl md:text-3xl font-bold text-white mt-5 mb-3">{t('about.meetourteam')}</h2>
 						<p className="text-white/90 text-xl mb-10">{t('about.teamdescription')}</p>
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 							{(people as Person[]).map((p) => (
 						<PictureFrame
 							key={p.username}

@@ -1,17 +1,21 @@
-// 
+//
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { AdminProvider, useAdmin } from "@/lib/store";
+import { AdminProvider, useAdmin } from "../lib/store";
 
 const NAV = [
-  { label: "Dashboard", href: "/dashboard", icon: "◈" },
-  { label: "Contributions", href: "/dashboard/contributions", icon: "📁" },
-  { label: "Letters", href: "/dashboard/letters", icon: "✉" },
-  { label: "Users", href: "/dashboard/users", icon: "◉" },
-  { label: "Library", href: "/dashboard/library", icon: "◧" },
-  { label: "Settings", href: "/dashboard/settings", icon: "◎" },
+  { label: "Dashboard", href: "/admin/dashboard", icon: "◈" },
+  {
+    label: "Contributions",
+    href: "/admin/dashboard/contributions",
+    icon: "📁",
+  },
+  { label: "Letters", href: "/admin/dashboard/letters", icon: "✉" },
+  { label: "Users", href: "/admin/dashboard/users", icon: "◉" },
+  { label: "Library", href: "/admin/dashboard/library", icon: "◧" },
+  { label: "Settings", href: "/admin/dashboard/settings", icon: "◎" },
 ];
 
 function NotificationsPanel({ onClose }: { onClose: () => void }) {
@@ -90,12 +94,12 @@ function Inner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== "undefined" && !localStorage.getItem("bw_admin_auth"))
-      router.push("/login");
+      router.push("/admin/login");
   }, [router]);
 
   const logout = () => {
     localStorage.removeItem("bw_admin_auth");
-    router.push("/login");
+    router.push("/admin/login");
   };
 
   const pendingContribs = contributions.filter(
@@ -103,8 +107,8 @@ function Inner({ children }: { children: React.ReactNode }) {
   ).length;
   const pendingLetters = letters.filter((l) => l.status === "pending").length;
   const BADGES: Record<string, number> = {
-    "/dashboard/contributions": pendingContribs,
-    "/dashboard/letters": pendingLetters,
+    "/admin/dashboard/contributions": pendingContribs,
+    "/admin/dashboard/letters": pendingLetters,
   };
 
   const pageTitle = NAV.find((n) => n.href === pathname)?.label ?? "Dashboard";

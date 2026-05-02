@@ -1,6 +1,6 @@
 "use client";
 
-import { useAdmin } from "@/lib/store";
+import { useAdmin } from "../lib/store";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -172,7 +172,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <Link
-              href="/dashboard/contributions"
+              href="/admin/dashboard/contributions"
               className="text-xs px-3 py-1 rounded-lg transition-colors"
               style={{ background: "#00c8ff15", color: "#00c8ff" }}
             >
@@ -188,7 +188,7 @@ export default function DashboardPage() {
                   title={c.name}
                   subtitle={`${c.division} • ${c.bacYear}`}
                   status={c.status}
-                  onClick={() => router.push("/dashboard/contributions")}
+                  onClick={() => router.push("/admin/dashboard/contributions")}
                 />
               ))
             ) : (
@@ -218,7 +218,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <Link
-              href="/dashboard/letters"
+              href="/admin/dashboard/letters"
               className="text-xs px-3 py-1 rounded-lg transition-colors"
               style={{ background: "#8b5cf610", color: "#8b5cf6" }}
             >
@@ -234,7 +234,7 @@ export default function DashboardPage() {
                   title={l.name}
                   subtitle={`${l.division} • ${l.bacYear}`}
                   status={l.status}
-                  onClick={() => router.push("/dashboard/letters")}
+                  onClick={() => router.push("/admin/dashboard/letters")}
                 />
               ))
             ) : (

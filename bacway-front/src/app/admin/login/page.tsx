@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const DEFAULT_PIN = "1234";
@@ -10,15 +10,6 @@ export default function LoginPage() {
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      localStorage.getItem("bw_admin_auth")
-    ) {
-      router.replace("/dashboard");
-    }
-  }, [router]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,7 +21,7 @@ export default function LoginPage() {
     }
     setLoading(true);
     localStorage.setItem("bw_admin_auth", "true");
-    router.replace("/dashboard");
+    router.replace("/admin/dashboard");
   };
 
   return (

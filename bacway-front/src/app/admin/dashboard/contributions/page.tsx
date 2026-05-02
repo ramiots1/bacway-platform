@@ -1,16 +1,16 @@
 "use client";
 import { useState } from "react";
-import { useAdmin } from "@/lib/store";
-import { Letter, ContributionStatus } from "@/lib/data";
-import { Badge } from "@/components/Badge";
-import { RejectModal } from "@/components/RejectModal";
+import { useAdmin } from "../../lib/store";
+import { Contribution, ContributionStatus } from "../../lib/data";
+import { Badge } from "../../components/Badge";
+import { RejectModal } from "../../components/RejectModal";
 
-function LetterCard({
-  l,
+function ContributionCard({
+  c,
   onAccept,
   onReject,
 }: {
-  l: Letter;
+  c: Contribution;
   onAccept: () => void;
   onReject: () => void;
 }) {
@@ -24,6 +24,7 @@ function LetterCard({
         borderColor: expanded ? "#2a2a2a" : "#1e1e1e",
       }}
     >
+      {/* Row */}
       <button
         className="w-full flex items-center justify-between px-5 py-4 text-left"
         onClick={() => setExpanded(!expanded)}
@@ -31,63 +32,85 @@ function LetterCard({
         <div className="flex items-center gap-4">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0"
-            style={{ background: "#10b98115", color: "#10b981" }}
+            style={{ background: "#00c8ff15", color: "#00c8ff" }}
           >
-            {l.name.charAt(0)}
+            {c.name.charAt(0)}
           </div>
           <div>
-            <div className="text-white font-medium text-sm">{l.name}</div>
+            <div className="text-white font-medium text-sm">{c.name}</div>
             <div
-              className="text-xs mt-0.5 flex items-center gap-1.5"
+              className="text-xs mt-0.5 flex items-center gap-1.5 flex-wrap"
               style={{ color: "#555" }}
             >
-              <span>BAC {l.bacYear}</span>
+              <span>BAC {c.bacYear}</span>
               <span style={{ color: "#333" }}>·</span>
-              <span style={{ color: "#10b981" }}>{l.score}/20</span>
+              <span style={{ color: "#00c8ff" }}>{c.score}/20</span>
               <span style={{ color: "#333" }}>·</span>
-              <span>{l.division}</span>
+              <span>{c.division}</span>
             </div>
             <div className="text-xs mt-0.5" style={{ color: "#3a3a3a" }}>
-              📅 {l.submittedAt} &nbsp; ✉ {l.email}
+              📅 {c.submittedAt} &nbsp; ✉ {c.email}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <Badge status={l.status} />
+          <Badge status={c.status} />
           <span className="text-xs" style={{ color: "#333" }}>
             {expanded ? "▲" : "▼"}
           </span>
         </div>
       </button>
 
+      {/* Expanded content */}
       {expanded && (
         <div
           className="border-t px-5 pb-5 pt-4 space-y-4"
           style={{ borderColor: "#1a1a1a" }}
         >
-          <div className="rounded-xl p-4" style={{ background: "#0d0d0d" }}>
-            <p
-              className="text-xs font-medium uppercase tracking-widest mb-3"
-              style={{ color: "#3a3a3a" }}
-            >
-              Letter Content
-            </p>
-            <p
-              className="text-sm leading-relaxed whitespace-pre-line"
-              style={{ color: "#999" }}
-            >
-              {l.content}
-            </p>
+          {/* Description + link */}
+          <div
+            className="rounded-xl p-4 space-y-3"
+            style={{ background: "#0d0d0d" }}
+          >
+            <div>
+              <p
+                className="text-xs font-medium uppercase tracking-widest mb-1.5"
+                style={{ color: "#3a3a3a" }}
+              >
+                Description
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "#999" }}>
+                {c.description}
+              </p>
+            </div>
+            <div>
+              <p
+                className="text-xs font-medium uppercase tracking-widest mb-1.5"
+                style={{ color: "#3a3a3a" }}
+              >
+                Google Drive Link
+              </p>
+              <a
+                href={c.driveLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm break-all inline-flex items-center gap-1.5 transition-opacity hover:opacity-80"
+                style={{ color: "#00c8ff" }}
+              >
+                {c.driveLink} ↗
+              </a>
+            </div>
           </div>
 
-          {l.status === "pending" && (
+          {/* Actions */}
+          {c.status === "pending" && (
             <div className="flex gap-3">
               <button
                 onClick={onAccept}
                 className="flex-1 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:brightness-110"
                 style={{ background: "#10b981", color: "#fff" }}
               >
-                ✓ Accept & Publish
+                ✓ Accept & Archive
               </button>
               <button
                 onClick={onReject}
@@ -103,7 +126,7 @@ function LetterCard({
             </div>
           )}
 
-          {l.status === "accepted" && (
+          {c.status === "accepted" && (
             <div
               className="rounded-xl p-3.5 flex items-center gap-2.5"
               style={{ background: "#10b98108", border: "1px solid #10b98122" }}
@@ -111,16 +134,16 @@ function LetterCard({
               <span className="text-lg">✅</span>
               <div>
                 <p className="text-sm font-medium" style={{ color: "#10b981" }}>
-                  Published on the homepage
+                  Accepted & archived
                 </p>
                 <p className="text-xs mt-0.5" style={{ color: "#555" }}>
-                  This letter is now live and visible to BAC candidates.
+                  This resource is now live in the BACWAY Library.
                 </p>
               </div>
             </div>
           )}
 
-          {l.status === "rejected" && (
+          {c.status === "rejected" && (
             <div
               className="rounded-xl p-3.5 space-y-2"
               style={{ background: "#ef444408", border: "1px solid #ef444420" }}
@@ -131,12 +154,12 @@ function LetterCard({
                   Rejected — email sent to contributor
                 </p>
               </div>
-              {l.rejectionReason && (
+              {c.rejectionReason && (
                 <p
                   className="text-xs leading-relaxed pl-6"
                   style={{ color: "#888" }}
                 >
-                  {l.rejectionReason}
+                  {c.rejectionReason}
                 </p>
               )}
             </div>
@@ -154,24 +177,25 @@ const TAB_COLORS: Record<ContributionStatus, string> = {
   rejected: "#ef4444",
 };
 
-export default function LettersPage() {
-  const { letters, acceptLetter, rejectLetter } = useAdmin();
+export default function ContributionsPage() {
+  const { contributions, acceptContribution, rejectContribution } = useAdmin();
   const [tab, setTab] = useState<ContributionStatus>("pending");
   const [rejectTarget, setRejectTarget] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const filtered = letters
-    .filter((l) => l.status === tab)
+  const filtered = contributions
+    .filter((c) => c.status === tab)
     .filter(
-      (l) =>
+      (c) =>
         !search ||
-        l.name.toLowerCase().includes(search.toLowerCase()) ||
-        l.division.toLowerCase().includes(search.toLowerCase()),
+        c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.division.toLowerCase().includes(search.toLowerCase()) ||
+        c.email.toLowerCase().includes(search.toLowerCase()),
     );
 
   const counts = TABS.reduce(
     (acc, t) => {
-      acc[t] = letters.filter((l) => l.status === t).length;
+      acc[t] = contributions.filter((c) => c.status === t).length;
       return acc;
     },
     {} as Record<ContributionStatus, number>,
@@ -181,9 +205,9 @@ export default function LettersPage() {
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       {rejectTarget && (
         <RejectModal
-          type="letter"
+          type="contribution"
           onConfirm={(reason) => {
-            rejectLetter(rejectTarget, reason);
+            rejectContribution(rejectTarget, reason);
             setRejectTarget(null);
           }}
           onCancel={() => setRejectTarget(null)}
@@ -191,13 +215,15 @@ export default function LettersPage() {
       )}
 
       <div className="mb-7">
-        <h1 className="text-xl font-bold text-white">Letters Management</h1>
+        <h1 className="text-xl font-bold text-white">
+          Contributions Management
+        </h1>
         <p className="text-sm mt-1" style={{ color: "#555" }}>
-          Review and publish contributor experience letters shown on the
-          homepage
+          Review, accept, or reject contributor file submissions
         </p>
       </div>
 
+      {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="flex gap-2">
           {TABS.map((t) => (
@@ -234,26 +260,29 @@ export default function LettersPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search name, division..."
+            placeholder="Search name, division, email..."
             className="w-full pl-8 pr-4 py-2 rounded-xl text-sm text-white outline-none"
             style={{ background: "#111", border: "1px solid #1e1e1e" }}
           />
         </div>
       </div>
 
+      {/* List */}
       <div className="space-y-3">
         {filtered.length === 0 ? (
           <div className="text-center py-20" style={{ color: "#333" }}>
             <div className="text-5xl mb-3">📭</div>
-            <p className="text-sm">No {tab} letters</p>
+            <p className="text-sm">
+              No {tab} contributions{search ? " matching your search" : ""}
+            </p>
           </div>
         ) : (
-          filtered.map((l) => (
-            <LetterCard
-              key={l.id}
-              l={l}
-              onAccept={() => acceptLetter(l.id)}
-              onReject={() => setRejectTarget(l.id)}
+          filtered.map((c) => (
+            <ContributionCard
+              key={c.id}
+              c={c}
+              onAccept={() => acceptContribution(c.id)}
+              onReject={() => setRejectTarget(c.id)}
             />
           ))
         )}

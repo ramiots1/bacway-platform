@@ -59,7 +59,8 @@
   },
   "library": {
     "title": "Bacway Library",
-    "subtitle": "Explore a wide range of educational resources uploaded by former baccalaureate students. From recorded lessons to notes and past exams, we have everything you need to prepare for the BAC exam.",
+    "noFolders": "No folders yet",
+    "subtitle": "Explore learning resources shared by former BAC students, including lessons, summaries, and notes. You may also find study materials and contacts of high-achieving students.",
     "searchPlaceholder": "Search for resources...",
     "filterLabel": "Filter by:",
     "subject": "Subject",
@@ -71,6 +72,8 @@
     "loginForMore": "Access library for more >",
     "noContributions": "No contributions yet.",
     "divisions": {
+      "title": "BAC Divisions",
+      "searchButton": "Search",
       "mathematics": "Mathematics Division",
       "science": "Science Division", 
       "technicalMath": "Technical Mathematics Division",
@@ -167,6 +170,13 @@
     }
   },
   "contribute": {
+  "confirm": {
+    "title": "Confirm Your Contribution",
+    "subtitle": "Please ensure that all information is accurate and that your resources adhere to our content guidelines. Inappropriate or plagiarized content will not be accepted.",
+    "cancel": "Cancel",
+    "approve": "Submit",
+    "sending": "Submitting..."
+  },
   "hero": {
     "title": "Be one of us",
     "subtitle": "A generation that doesn’t just prepare for exams but reshapes the path for everyone after them. Share what matters. Build what lasts. Leave impact in every resource you touch. This is where students become something bigger than themselves."

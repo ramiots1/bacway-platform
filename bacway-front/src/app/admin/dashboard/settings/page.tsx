@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { DIVISIONS } from "@/lib/data";
+import { DIVISIONS } from "../../lib/data";
 
 function Section({
   title,

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { mockUsers } from "@/lib/data";
+import { mockUsers } from "../../lib/data";
 
 export default function UsersPage() {
   const [search, setSearch] = useState("");

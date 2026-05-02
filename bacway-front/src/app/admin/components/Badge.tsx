@@ -1,4 +1,4 @@
-import { ContributionStatus } from "@/lib/data";
+import { ContributionStatus } from "../lib/data";
 
 const CONFIG = {
   pending: {

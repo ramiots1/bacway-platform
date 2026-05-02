@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useAdmin } from "@/lib/store";
-import { Letter, ContributionStatus } from "@/lib/data";
-import { Badge } from "@/components/Badge";
-import { RejectModal } from "@/components/RejectModal";
+import { useAdmin } from "../../lib/store";
+import { Letter, ContributionStatus } from "../../lib/data";
+import { Badge } from "../../components/Badge";
+import { RejectModal } from "../../components/RejectModal";
 
 function LetterCard({
   l,

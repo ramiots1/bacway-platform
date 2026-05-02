@@ -10,7 +10,7 @@ import api from '@/app/api/axios';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Mode   = 'contribute' | 'letter';
-type Status = 'idle' | 'loading' | 'success' | 'error';
+type Status = 'idle' | 'confirming' | 'loading' | 'success' | 'error';
 
 interface PersonalInfo {
   fullName:  string;
@@ -25,15 +25,25 @@ interface DriveRow   { name: string; url: string; description: string }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const PLATFORM_KEYS = ['Instagram', 'Facebook', 'LinkedIn', 'Other'] as const;
+const PLATFORM_KEYS = ['Instagram', 'Facebook', 'LinkedIn', 'Email', 'Other'] as const;
 const DIVISION_KEYS = [
   'mathematics', 'science', 'technicalMath',
   'management',  'languages', 'literature',
 ] as const;
 
-const MAX_CONTACTS    = 3;
-const MAX_DRIVES      = 4;
+const DIVISION_LABEL: Record<string, string> = {
+  mathematics:   'Mathematics',
+  science:       'Science',
+  technicalMath: 'Technical Math',
+  management:    'Management',
+  languages:     'Languages',
+  literature:    'Literature',
+};
+
+const MAX_CONTACTS     = 3;
+const MAX_DRIVES       = 4;
 const MIN_LETTER_CHARS = 500;
+const REQUEST_TIMEOUT  = 15_000; // 15 s before we give up
 
 const EMPTY_CONTACT = (): ContactRow => ({ platform: 'Instagram', handle: '' });
 const EMPTY_DRIVE   = (): DriveRow   => ({ name: '', url: '', description: '' });
@@ -41,7 +51,7 @@ const EMPTY_INFO: PersonalInfo = { fullName: '', email: '', bacYear: '', grade: 
 
 // ─── Shared styles ────────────────────────────────────────────────────────────
 
-const inputCls  = "w-full border rounded-s border-white/30 text-white text-sm px-3 py-2.5 placeholder-white/20 focus:outline-none focus:border-white/70 transition-colors duration-150";
+const inputCls  = "w-full border bg-[rgb(12,17,20)] rounded-s border-white/30 text-white text-sm px-3 py-2.5 placeholder-white/20 focus:outline-none focus:border-white/70 transition-colors duration-150";
 const selectCls = `${inputCls} appearance-none cursor-pointer`;
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -67,6 +77,111 @@ const Section: React.FC<{
       {action}
     </div>
     <div className="p-5 space-y-3">{children}</div>
+  </div>
+);
+
+// ─── Spinner ──────────────────────────────────────────────────────────────────
+
+const Spinner: React.FC = () => (
+  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+  </svg>
+);
+
+// ─── Confirmation Dialog ──────────────────────────────────────────────────────
+
+const ConfirmDialog: React.FC<{
+  mode:      Mode;
+  info:      PersonalInfo;
+  contacts:  ContactRow[];
+  drives:    DriveRow[];
+  letter:    string;
+  loading:   boolean;
+  error:     string;
+  onConfirm: () => void;
+  onCancel:  () => void;
+  t:         (key: string) => string;
+}> = ({ mode, info, contacts, drives, letter, loading, error, onConfirm, onCancel, t }) => {
+  const filledContacts = contacts.filter(c => c.handle.trim());
+  const filledDrives   = drives.filter(d => d.url.trim());
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-10"
+      onClick={loading ? undefined : onCancel}
+    >
+      <div
+        className="w-full max-w-md bg-black border border-white/20 rounded-2xl overflow-hidden shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4">
+          <h2 className="text-white font-bold text-base mb-1">
+            {t('contribute.confirm.title')}
+          </h2>
+          <p className="text-white/40 text-xs leading-relaxed">
+            {t('contribute.confirm.subtitle')}
+          </p>
+        </div>
+
+        {/* Summary — hidden while submitting */}
+        {!loading && (
+          <div className="px-6 pb-4 space-y-2 max-h-60 overflow-y-auto border-t border-white/8 pt-4">
+            <Row label={t('contribute.personal.fullName')} value={info.fullName} />
+            <Row label={t('contribute.personal.email')}    value={info.email} />
+            <Row label={t('contribute.personal.bacYear')}  value={info.bacYear} />
+            {info.grade && <Row label={t('contribute.personal.grade')} value={info.grade} />}
+            <Row label={t('contribute.personal.division')} value={DIVISION_LABEL[info.division] ?? info.division} />
+            <Row label="Type" value={mode === 'contribute' ? t('contribute.mode.contribute') : t('contribute.mode.letter')} highlight />
+          </div>
+        )}
+
+        {/* Loading state */}
+        {loading && (
+          <div className="px-6 py-8 flex flex-col items-center gap-3 border-t border-white/8">
+            <Spinner />
+            <p className="text-white/50 text-xs">{t('contribute.confirm.sending')}</p>
+          </div>
+        )}
+
+        {/* Inline error (timeout / network) shown after failed attempt */}
+        {error && !loading && (
+          <div className="mx-4 mb-3 px-3 py-2">
+            <p className="text-red-400 text-xs leading-relaxed">{error}</p>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="px-6 pb-6 flex gap-3">
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 py-2.5 border border-white/20 rounded-lg text-white/60 text-sm hover:bg-white/5 hover:text-white transition-all duration-150 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            {t('contribute.confirm.cancel')}
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 py-2.5 bg-blue-500 hover:bg-blue-400 rounded-lg text-white text-sm font-semibold transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {loading
+              ? <><Spinner /><span>{t('contribute.submit.loading')}</span></>
+              : t('contribute.confirm.approve')
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Small helper row inside the dialog
+const Row: React.FC<{ label: string; value: string; highlight?: boolean }> = ({ label, value, highlight }) => (
+  <div className="flex items-baseline gap-2">
+    <span className="text-white/30 text-[10px] shrink-0 w-20">{label}</span>
+    <span className={`text-xs truncate ${highlight ? 'text-blue-300 font-medium' : 'text-white/70'}`}>{value}</span>
   </div>
 );
 
@@ -116,14 +231,14 @@ const SuccessScreen: React.FC<{
 const ContributePage: React.FC = () => {
   const { t } = useTranslation();
 
-  const [mode,     setMode]     = useState<Mode>('contribute');
-  const [status,   setStatus]   = useState<Status>('idle');
-  const [errMsg,   setErrMsg]   = useState('');
-  const [info,     setInfo]     = useState<PersonalInfo>(EMPTY_INFO);
-  const [contacts, setContacts] = useState<ContactRow[]>([EMPTY_CONTACT()]);
-  const [drives,   setDrives]   = useState<DriveRow[]>([EMPTY_DRIVE()]);
-  const [letter,   setLetter]   = useState('');
-  const [picture,  setPicture]  = useState<File | null>(null);
+  const [mode,      setMode]      = useState<Mode>('contribute');
+  const [status,    setStatus]    = useState<Status>('idle');
+  const [dialogErr, setDialogErr] = useState('');
+  const [info,      setInfo]      = useState<PersonalInfo>(EMPTY_INFO);
+  const [contacts,  setContacts]  = useState<ContactRow[]>([EMPTY_CONTACT()]);
+  const [drives,    setDrives]    = useState<DriveRow[]>([EMPTY_DRIVE()]);
+  const [letter,    setLetter]    = useState('');
+  const [picture,   setPicture]   = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // ── Field updaters ───────────────────────────────────────────────────────────
@@ -146,7 +261,7 @@ const ContributePage: React.FC = () => {
   const removeDrive   = (i: number) => drives.length > 1 && setDrives(p => p.filter((_, idx) => idx !== i));
 
   const reset = () => {
-    setStatus('idle'); setInfo(EMPTY_INFO);
+    setStatus('idle'); setInfo(EMPTY_INFO); setDialogErr('');
     setContacts([EMPTY_CONTACT()]); setDrives([EMPTY_DRIVE()]);
     setLetter(''); setPicture(null); setMode('contribute');
   };
@@ -157,10 +272,19 @@ const ContributePage: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = async () => {
-    if (!isValid() || status === 'loading') return;
+  const handleSubmitClick = () => {
+    if (!isValid()) return;
+    setDialogErr('');
+    setStatus('confirming');
+  };
+
+  // Called after "I Approve" — dialog stays open and shows spinner
+  const handleConfirm = async () => {
     setStatus('loading');
-    setErrMsg('');
+    setDialogErr('');
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
     try {
       const payload = {
@@ -182,27 +306,36 @@ const ContributePage: React.FC = () => {
           .map(c => ({
             type: ({
               Instagram: 'INSTAGRAM',
-              Facebook: 'FACEBOOK',
-              LinkedIn: 'LINKEDIN',
-              Other: 'OTHER',
+              Facebook:  'FACEBOOK',
+              LinkedIn:  'LINKEDIN',
+              Other:     'OTHER',
             })[c.platform] || c.platform.toUpperCase(),
             contact: c.handle,
           })),
         resources: drives
           .filter(d => d.url.trim())
           .map(d => ({
-            folderName: d.name,
-            folderLink: d.url,
+            folderName:  d.name,
+            folderLink:  d.url,
             description: d.description,
           })),
       };
 
-      await api.post('', payload);
+      await api.post('', payload, { signal: controller.signal });
+      clearTimeout(timer);
       setStatus('success');
     } catch (err: any) {
-      const message = err.response?.data?.error || err.response?.data?.message || err.message || 'Submission failed';
-      setErrMsg(message);
-      setStatus('error');
+      clearTimeout(timer);
+      const isTimeout =
+        err.name === 'AbortError' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.toLowerCase().includes('aborted') ||
+        err.message?.toLowerCase().includes('timeout');
+      const message = isTimeout
+        ? 'The server took too long to respond. Please try again.'
+        : err.response?.data?.error || err.response?.data?.message || err.message || 'Submission failed.';
+      setDialogErr(message);
+      setStatus('confirming'); // stay in dialog so user can retry
     }
   };
 
@@ -215,7 +348,23 @@ const ContributePage: React.FC = () => {
   // ── Form ─────────────────────────────────────────────────────────────────────
 
   return (
-    <div className=" min-h-screen py-24 mx-0 flex flex-col items-center bg-[#0C1114]">
+    <div className="min-h-screen py-24 mx-0 flex flex-col items-center bg-[#0C1114]">
+
+      {/* ── Confirmation dialog — stays mounted during loading too ── */}
+      {(status === 'confirming' || status === 'loading') && (
+        <ConfirmDialog
+          mode={mode}
+          info={info}
+          contacts={contacts}
+          drives={drives}
+          letter={letter}
+          loading={status === 'loading'}
+          error={dialogErr}
+          onConfirm={handleConfirm}
+          onCancel={() => { setStatus('idle'); setDialogErr(''); }}
+          t={t}
+        />
+      )}
 
       {/* Hero */}
       <div className="relative w-full flex flex-col items-center text-center gap-5 pb-12 mt-7 mx-8">
@@ -227,19 +376,18 @@ const ContributePage: React.FC = () => {
           <p className="text-white font-light text-sm max-w-md leading-relaxed">
             <span suppressHydrationWarning>{t('contribute.hero.subtitle')}</span>
           </p>
-          
         </div>
         <Image
-                src={upShadowColorful}
-                alt="Bacway Shadow Decoration"
-                fill
-                className='object-bottom relative opacity-50 -z-0'
-                priority={false}
+          src={upShadowColorful}
+          alt="Bacway Shadow Decoration"
+          fill
+          className="object-bottom relative opacity-50 -z-0"
+          priority={false}
         />
       </div>
-      
+
       {/* ── Personal Information ── */}
-      <div className=" relative w-full border-t bg-[#0C1114] border-white/40 flex flex-col items-center">
+      <div className="relative w-full border-t bg-[#0C1114] border-white/40 flex flex-col items-center">
         <div className="w-full px-5 max-w-2xl">
           <Section title={t('contribute.personal.title')}>
             <div className="grid grid-cols-2 gap-3">
@@ -276,7 +424,7 @@ const ContributePage: React.FC = () => {
       </div>
 
       {/* ── Contact Information ── */}
-      <div className=" relative w-full border-t bg-[#0C1114] border-white/40 flex flex-col items-center">
+      <div className="relative w-full border-t bg-[#0C1114] border-white/40 flex flex-col items-center">
         <div className="w-full px-5 max-w-2xl">
           <Section
             title={t('contribute.contact.title')}
@@ -397,24 +545,15 @@ const ContributePage: React.FC = () => {
         </>
       )}
 
-      {/* ── Error ── */}
-      {status === 'error' && (
-        <p className="text-red-400 text-xs mt-3">{errMsg}</p>
-      )}
-
       {/* ── Submit ── */}
       <div className="flex flex-col items-center gap-3 pt-6 pb-10">
         <button
-          onClick={handleSubmit}
-          disabled={!isValid() || status === 'loading'}
+          onClick={handleSubmitClick}
+          disabled={!isValid()}
           className="px-12 py-3 bg-blue-500 text-white rounded-lg font-normal text-sm disabled:bg-gray-400 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
         >
           <span suppressHydrationWarning>
-            {status === 'loading'
-              ? t('contribute.submit.loading')
-              : mode === 'contribute'
-                ? t('contribute.submit.contribute')
-                : t('contribute.submit.letter')}
+            {mode === 'contribute' ? t('contribute.submit.contribute') : t('contribute.submit.letter')}
           </span>
         </button>
         <p className="text-white/40 text-xs text-center px-10 max-w-sm">

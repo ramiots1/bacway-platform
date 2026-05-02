@@ -1,5 +1,5 @@
 "use client";
-import { mockContributions, DIVISIONS } from "@/lib/data";
+import { mockContributions, DIVISIONS } from "../../lib/data";
 
 export default function LibraryPage() {
   const accepted = mockContributions.filter((c) => c.status === "accepted");
