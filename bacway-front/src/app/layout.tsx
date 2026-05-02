@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import Footer from "@/components/layout/Footer";
 import NavbarPublic from "@/components/layout/NavbarPublic";
 import TranslationProvider from '@/i18n/TranslationProvider';
@@ -8,6 +7,9 @@ import { cookies } from 'next/headers';
 export const metadata: Metadata = {
   title: "Bacway - Your BAC Exam Resource Hub",
   description: "Your ultimate resource hub for BAC exam preparation. Discover curated study materials, expert tips, and a supportive community to help you succeed.",
+  icons: {
+    icon: '/bacwayBadge.svg',
+  },
 };
 
 export default async function RootLayout({
