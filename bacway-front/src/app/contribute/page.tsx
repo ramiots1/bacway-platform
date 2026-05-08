@@ -49,6 +49,45 @@ const EMPTY_CONTACT = (): ContactRow => ({ platform: 'Instagram', handle: '' });
 const EMPTY_DRIVE   = (): DriveRow   => ({ name: '', url: '', description: '' });
 const EMPTY_INFO: PersonalInfo = { fullName: '', email: '', bacYear: '', grade: '', division: '' };
 
+// ─── Contact handle normalization ─────────────────────────────────────────────
+// Turns user-typed handles like "@ramiots" into real, clickable URLs.
+// Only applied at submit time so the input field stays exactly as the user typed.
+
+const URL_RE = /^https?:\/\//i;
+
+function normalizeHandle(platform: string, raw: string): string {
+  const v = raw.trim();
+  if (!v) return v;
+
+  // Already a full URL? Leave it alone.
+  if (URL_RE.test(v)) return v;
+
+  switch (platform) {
+    case 'Instagram': {
+      const handle = v.replace(/^@/, '').replace(/^(www\.)?instagram\.com\//i, '');
+      return `https://www.instagram.com/${handle}`;
+    }
+    case 'Facebook': {
+      const handle = v.replace(/^@/, '').replace(/^(www\.)?facebook\.com\//i, '');
+      return `https://www.facebook.com/${handle}`;
+    }
+    case 'LinkedIn': {
+      const handle = v
+        .replace(/^@/, '')
+        .replace(/^(www\.)?linkedin\.com\//i, '')
+        .replace(/^in\//i, '');
+      return `https://www.linkedin.com/in/${handle}`;
+    }
+    case 'Email': {
+      return v.startsWith('mailto:') ? v : `mailto:${v}`;
+    }
+    case 'Other':
+    default:
+      // Don't guess. Admin reviews it manually.
+      return v;
+  }
+}
+
 // ─── Shared styles ────────────────────────────────────────────────────────────
 
 const inputCls  = "w-full border bg-[rgb(12,17,20)] rounded-s border-white/30 text-white text-sm px-3 py-2.5 placeholder-white/20 focus:outline-none focus:border-white/70 transition-colors duration-150";
@@ -308,9 +347,10 @@ const ContributePage: React.FC = () => {
               Instagram: 'INSTAGRAM',
               Facebook:  'FACEBOOK',
               LinkedIn:  'LINKEDIN',
+              Email:     'EMAIL',
               Other:     'OTHER',
             })[c.platform] || c.platform.toUpperCase(),
-            contact: c.handle,
+            contact: normalizeHandle(c.platform, c.handle),
           })),
         resources: drives
           .filter(d => d.url.trim())
