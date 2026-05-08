@@ -47,7 +47,7 @@ const Info = () => {
               src={upShadowColorful}
               alt="Bacway Shadow Decoration"
               fill
-              className='object-contain object-bottom opacity-50'
+              className='object-fill object-bottom opacity-50'
               priority={false}
             />
           </div>

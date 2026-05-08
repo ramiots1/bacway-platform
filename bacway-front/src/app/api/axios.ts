@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1/contributors';
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const api: AxiosInstance = axios.create({
   baseURL,

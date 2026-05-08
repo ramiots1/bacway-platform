@@ -42,7 +42,7 @@ const DIVISION_LABEL: Record<string, string> = {
 
 const MAX_CONTACTS     = 3;
 const MAX_DRIVES       = 4;
-const MIN_LETTER_CHARS = 500;
+const MIN_LETTER_CHARS = 20;
 const REQUEST_TIMEOUT  = 15_000; // 15 s before we give up
 
 const EMPTY_CONTACT = (): ContactRow => ({ platform: 'Instagram', handle: '' });

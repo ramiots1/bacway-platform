@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Image from 'next/image'
 import catSad from '@/assets/catMood/catSad.svg'
-import folderIcon from '@/assets/folderIcon.svg' // Make sure this path is correct
+import folderIcon from '@/assets/folderIcon.svg'
 import { useTranslation } from '@/i18n/TranslationProvider';
 import api from '@/app/api/axios';
 import Link from 'next/link';
@@ -43,6 +43,12 @@ const SPECIALITY_MAP: Record<string, string> = {
   LETTRE:    'literature',
 };
 
+const CACHE_KEY = 'library_submissions';
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// ─── Module-level cache (survives re-mounts within the same session) ──────────
+let memoryCache: Submission[] | null = null;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const toDivision = (s: string): string =>
@@ -68,6 +74,38 @@ const extractArray = (data: unknown): any[] => {
   if (data && Array.isArray((data as any).submissions)) return (data as any).submissions;
   return [];
 };
+
+const readLocalCache = (): Submission[] | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { data, ts } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) return null;
+    return data as Submission[];
+  } catch {
+    return null;
+  }
+};
+
+const writeLocalCache = (data: Submission[]) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }));
+  } catch {}
+};
+
+// ─── Skeleton card ────────────────────────────────────────────────────────────
+
+const ResourceCardSkeleton: React.FC = () => (
+  <div className="flex flex-col border rounded-2xl border-white/50 bg-white/5 overflow-hidden animate-pulse">
+    <div className="flex items-center gap-3 px-3 py-2.5">
+      <div className="shrink-0 w-[30px] h-[30px] rounded bg-white/10" />
+      <div className="flex-1 min-w-0 space-y-2">
+        <div className="h-3.5 bg-white/10 rounded w-3/4" />
+        <div className="h-3 bg-white/10 rounded w-1/2" />
+      </div>
+    </div>
+  </div>
+);
 
 // ─── Resource card ────────────────────────────────────────────────────────────
 
@@ -98,8 +136,8 @@ const ResourceCard: React.FC<{
 
 const Library = () => {
   const { t, locale } = useTranslation();
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [submissions, setSubmissions] = useState<Submission[]>(() => memoryCache ?? []);
+  const [loading, setLoading] = useState(!memoryCache);
   const [selectedDivision, setSelectedDivision] = useState<string | null>('mathematics');
 
   const divisions: Division[] = [
@@ -116,18 +154,35 @@ const Library = () => {
   // ── Fetch ─────────────────────────────────────────────────────────────────
 
   useEffect(() => {
+    // Already have in-memory cache — skip fetch entirely
+    if (memoryCache) return;
+
     let cancelled = false;
+
     const load = async () => {
+      // 1. Try localStorage → show instantly while real fetch runs in background
+      const local = readLocalCache();
+      if (local && !cancelled) {
+        memoryCache = local;
+        setSubmissions(local);
+        setLoading(false);
+      }
+
+      // 2. Always revalidate from network
       try {
         const res = await api.get('');
         if (cancelled) return;
-        setSubmissions(normalizeSubmissions(extractArray(res.data)));
+        const normalized = normalizeSubmissions(extractArray(res.data));
+        memoryCache = normalized;
+        writeLocalCache(normalized);
+        setSubmissions(normalized);
       } catch (err) {
         if (!cancelled) console.error('Failed to load submissions:', err);
       } finally {
         if (!cancelled) setLoading(false);
       }
     };
+
     load();
     return () => { cancelled = true; };
   }, []);
@@ -136,41 +191,42 @@ const Library = () => {
 
   const selectedResources = useMemo(() => {
     if (!selectedDivision || !submissions.length) return [];
-    
+
     const rows: { resource: Resource; s: Submission }[] = [];
     submissions.forEach(s => {
       if (toDivision(s.bacSpeciality) === selectedDivision) {
-        (s.resources ?? []).forEach(r => {
-          rows.push({ resource: r, s });
-        });
+        (s.resources ?? []).forEach(r => rows.push({ resource: r, s }));
       }
     });
-    
-    return rows.slice(0, 4); // Max 4 resources
+
+    return rows.slice(0, 4);
   }, [submissions, selectedDivision]);
 
   return (
-    <div className=' w-full relative z-50'>
+    <div className='w-full relative z-50'>
       {/* Header Section */}
       <div className='flex flex-col items-center justify-center py-10 px-0'>
-        <Image src="/bacwayLibrary.svg" alt="Bacway Library Logo" width={100} height={100} className=' h-25 md:h-30' />
+        <Image src="/bacwayLibrary.svg" alt="Bacway Library Logo" width={100} height={100} className='h-25 md:h-30' />
         <h2 className='text-white text-3xl md:text-5xl mt-2 font-bold'>{t('library.title')}</h2>
         <p className='text-gray-300 text-sm md:text-base text-center max-w-2xl mt-4 px-5'>{t('library.subtitle')}</p>
       </div>
 
       {/* Two Column Layout */}
-      <div className=" m-0 border-y border-white/20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 ">
+      <div className="m-0 border-y border-white/20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
 
           {/* Left Column - Drive Folders/Resources */}
           <div>
             <div className="h-full flex items-start justify-center p-6">
               {loading ? (
-                <div className="flex flex-col items-center gap-3">
-                  <p className="text-white/25 text-xs animate-pulse">Please wait...</p>
+                <div className="w-full">
+                  <div className="grid grid-cols-1 gap-3">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <ResourceCardSkeleton key={i} />
+                    ))}
+                  </div>
                 </div>
               ) : selectedDivision && selectedResources.length > 0 ? (
-                // 1-column grid for resources
                 <div className="w-full">
                   <div className="grid grid-cols-1 gap-3">
                     {selectedResources.map(({ resource, s }, i) => (
@@ -179,20 +235,13 @@ const Library = () => {
                   </div>
                 </div>
               ) : selectedDivision ? (
-                // No contributions
                 <div className="flex my-8 flex-col height-full justify-center items-center gap-3">
-                  <Image
-                    src={catSad}
-                    alt="No Contributions"
-                    width={300}
-                    height={300}
-                  />
+                  <Image src={catSad} alt="No Contributions" width={300} height={300} />
                   <p className="text-white/100 text-2xl text-center">
                     {isRTL ? 'لا توجد مساهمات' : 'No contributions yet'}
                   </p>
                 </div>
               ) : (
-                // No division selected
                 <div className="flex flex-col items-center justify-center py-16">
                   <p className={`text-gray-500 text-center ${isRTL ? 'font-arabic' : 'font-outfit'}`}>
                     {isRTL ? 'اختر شعبة لعرض الموارد' : 'Select a division to view resources'}
@@ -201,7 +250,7 @@ const Library = () => {
               )}
             </div>
           </div>
-          
+
           {/* Right Column - BAC Divisions */}
           <div className="py-8 not-md:border-t md:border-l border-white/20 px-5 md:px-10">
             <div className="">
@@ -212,12 +261,9 @@ const Library = () => {
                   onClick={() => setSelectedDivision(division.id)}
                 >
                   <div className={`flex flex-col gap-3 ${isRTL ? 'font-arabic text-right' : 'font-outfit'}`}>
-                    {/* Division Name */}
                     <h4 className={`text-lg font-semibold transition-colors`}>
                       {t(`library.divisions.${division.nameKey}` as any)}
                     </h4>
-                    
-                    {/* Login for more resources */}
                     {selectedDivision === division.id && (
                       <Link
                         href="/library"
@@ -233,7 +279,7 @@ const Library = () => {
               ))}
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>
