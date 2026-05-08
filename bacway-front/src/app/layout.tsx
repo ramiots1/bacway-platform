@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+
 import "./globals.css";
+
 import Footer from "@/components/layout/Footer";
 import NavbarPublic from "@/components/layout/NavbarPublic";
 import TranslationProvider from '@/i18n/TranslationProvider';
@@ -28,13 +30,13 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100;200;300;400;500;600;700;800;900&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-  <body>
+  <body suppressHydrationWarning>
   <TranslationProvider initialLocale={initialLocale}>
         <NavbarPublic />
         {children} 
         <Footer />
   </TranslationProvider>
-      </body>
+  </body>
     </html>
   );
 }

@@ -1,105 +1,66 @@
+// src/app/admin/login/page.tsx
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { isAuthed, login } from "../auth";
 
-const DEFAULT_PIN = "1234";
-
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [pin, setPin] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
-    const configuredPin = localStorage.getItem("bw_admin_pin") ?? DEFAULT_PIN;
-    if (pin.trim() !== configuredPin) {
+  useEffect(() => {
+    if (isAuthed()) router.replace("/admin");
+  }, [router]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (login(pin)) {
+      router.replace("/admin");
+    } else {
       setError("Incorrect PIN");
-      return;
+      setPin("");
     }
-    setLoading(true);
-    localStorage.setItem("bw_admin_auth", "true");
-    router.replace("/admin/dashboard");
-  };
+  }
 
   return (
-    <main
-      className="min-h-screen flex flex-col items-center justify-center"
-      style={{ background: "#0d0d0d" }}
-    >
-      {/* Logo above the card — exactly like the screenshot */}
-      <div className="mb-6 text-center">
-        <span className="text-2xl font-black tracking-tight text-white">
-          BAC<span className="font-thin">WAY</span>
-        </span>
-        <span
-          className="text-2xl ml-2 font-light tracking-[0.18em]"
-          style={{ color: "#888" }}
-        >
-          ADMIN
-        </span>
-      </div>
-
-      {/* Card */}
-      <section
-        className="w-full rounded-2xl p-8"
-        style={{
-          maxWidth: 340,
-          background: "#141414",
-          border: "1px solid #222",
-          boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
-        }}
+    <div className="min-h-screen flex items-center justify-center bg-black-50 px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-sm bg-white border border-gray-200 rounded-lg p-6 shadow-sm"
       >
-        <h1 className="text-base font-semibold text-white">Welcome team !</h1>
-        <p className="text-xs mt-1 mb-6" style={{ color: "#666" }}>
-          Keep your active PIN to continue
-        </p>
+        <h1 className="text-xl text-black font-semibold mb-1">Bacway Admin</h1>
+        <p className="text-sm text-gray-500 mb-6">Enter the admin PIN to continue.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="pin"
-              className="block text-xs font-semibold mb-2 tracking-wide"
-              style={{ color: "#aaa" }}
-            >
-              ADMIN PIN
-            </label>
-            <input
-              id="pin"
-              type="password"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              autoComplete="off"
-              placeholder="••••••••"
-              className="w-full rounded-lg px-4 py-3 text-sm text-white outline-none"
-              style={{
-                background: "#1e1e1e",
-                border: "1px solid #2a2a2a",
-                caretColor: "#00c8ff",
-              }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "#00c8ff55")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "#2a2a2a")}
-            />
-          </div>
+        <label htmlFor="pin" className="block text-sm text-black font-medium mb-2">
+          PIN
+        </label>
+        <input
+          id="pin"
+          type="password"
+          inputMode="numeric"
+          autoComplete="off"
+          value={pin}
+          onChange={(e) => setPin(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-gray-900 text-black focus:border-transparent text-base"
+          placeholder="••••"
+          autoFocus
+        />
 
-          {error && (
-            <p className="text-xs font-medium" style={{ color: "#ef4444" }}>
-              {error}
-            </p>
-          )}
+        {error && (
+          <p className="mt-3 text-sm text-red-600">{error}</p>
+        )}
 
-          <button
-            type="submit"
-            disabled={loading || !pin}
-            className="w-full rounded-lg py-3 text-sm font-semibold transition-all disabled:opacity-50"
-            style={{ background: "#00c8ff", color: "#000" }}
-          >
-            {loading ? "Signing in…" : "Login"}
-          </button>
-        </form>
-      </section>
-    </main>
+        <button
+          type="submit"
+          disabled={!pin}
+          className="mt-6 w-full bg-gray-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Sign in
+        </button>
+      </form>
+    </div>
   );
 }
