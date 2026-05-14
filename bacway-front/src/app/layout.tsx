@@ -7,6 +7,8 @@ import NavbarPublic from "@/components/layout/NavbarPublic";
 import TranslationProvider from '@/i18n/TranslationProvider';
 import { cookies } from 'next/headers';
 
+import { Analytics } from "@vercel/analytics/next";
+
 export const metadata: Metadata = {
   title: "Bacway - Your BAC Exam Resource Hub",
   description: "Your ultimate resource hub for BAC exam preparation. Discover curated study materials, expert tips, and a supportive community to help you succeed.",
@@ -36,6 +38,7 @@ export default async function RootLayout({
         {children} 
         <Footer />
   </TranslationProvider>
+  <Analytics />
   </body>
     </html>
   );
