@@ -7,6 +7,8 @@ import NavbarPublic from "@/components/layout/NavbarPublic";
 import TranslationProvider from '@/i18n/TranslationProvider';
 import { cookies } from 'next/headers';
 
+import AgentWidget from "@/components/AgentWidget"; // Import the AgentWidget component
+
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -38,6 +40,7 @@ export default async function RootLayout({
         {children} 
         <Footer />
   </TranslationProvider>
+  <AgentWidget /> 
   <Analytics />
   </body>
     </html>

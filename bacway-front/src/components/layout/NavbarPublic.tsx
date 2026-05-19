@@ -125,7 +125,7 @@ const NavbarPublic: React.FC = () => {
   return (
     <nav
       aria-label="Main navigation"
-      className="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-[calc(100%-5rem)] max-w-7xl top-5 z-100"
+      className="fixed left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] md:w-[calc(100%-5rem)] max-w-7xl top-5 z-200"
     >
       <div
         className={`
