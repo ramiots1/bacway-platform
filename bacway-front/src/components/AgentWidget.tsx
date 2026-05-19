@@ -44,10 +44,22 @@ export default function AgentWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+
+  // Tracks the visualViewport so we can position the panel ABOVE the keyboard
+  // on iOS Safari. { height, top } in pixels.
+  const [vv, setVv] = useState<{ height: number; top: number } | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile size on mount + when window resizes
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Lock background scroll on mobile when chat is open
   useEffect(() => {
@@ -59,49 +71,42 @@ export default function AgentWidget() {
     };
   }, [open]);
 
-  // Track the visualViewport height — this is the actual visible area,
-  // excluding the keyboard. Updates whenever keyboard opens/closes.
+  // Track visualViewport — height shrinks when keyboard opens, top shifts when
+  // user pinch-zooms or iOS does its weird offset thing.
   useEffect(() => {
     if (!open || typeof window === "undefined") return;
-
-    const vv = window.visualViewport;
-    if (!vv) {
-      // Fallback for browsers without visualViewport API (very rare now)
-      setViewportHeight(window.innerHeight);
-      return;
-    }
+    const v = window.visualViewport;
+    if (!v) return;
 
     const update = () => {
-      setViewportHeight(vv.height);
-      // Also keep scroll pinned to bottom when keyboard appears
+      setVv({ height: v.height, top: v.offsetTop });
+      // Keep messages scrolled to bottom while keyboard adjusts
       const el = scrollRef.current;
       if (el) el.scrollTop = el.scrollHeight;
     };
 
     update();
-    vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
+    v.addEventListener("resize", update);
+    v.addEventListener("scroll", update);
     return () => {
-      vv.removeEventListener("resize", update);
-      vv.removeEventListener("scroll", update);
+      v.removeEventListener("resize", update);
+      v.removeEventListener("scroll", update);
     };
   }, [open]);
 
-  // Auto-scroll to bottom on new messages (only if user is near bottom)
+  // Auto-scroll on new messages
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-
     const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
     if (!nearBottom) return;
-
     const id = requestAnimationFrame(() => {
       el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
     });
     return () => cancelAnimationFrame(id);
   }, [messages, loading]);
 
-  // Focus input when panel opens — small delay so the open animation finishes
+  // Focus input when panel opens (delayed for animation)
   useEffect(() => {
     if (!open) return;
     const id = setTimeout(() => inputRef.current?.focus(), 100);
@@ -150,9 +155,17 @@ export default function AgentWidget() {
     }
   }
 
-  // Mobile panel height — falls back to 100dvh if JS not run yet
-  // Desktop ignores this entirely (sm:h-... wins)
-  const mobileHeight = viewportHeight ? `${viewportHeight}px` : "100dvh";
+  // ── Mobile panel positioning ────────────────────────────────────────────────
+  // On mobile + iOS Safari with keyboard open, the trick is to use both height
+  // AND top to track the visualViewport — otherwise the panel stays anchored
+  // to the window top and the bottom (input) ends up under the keyboard.
+  const mobileStyle: React.CSSProperties =
+    isMobile && vv
+      ? {
+          height: `${vv.height}px`,
+          top: `${vv.top}px`,
+        }
+      : {};
 
   return (
     <>
@@ -171,28 +184,27 @@ export default function AgentWidget() {
       {/* ── Chat panel ── */}
       {open && (
         <div
-          ref={panelRef}
           className="
             fixed z-[300] bg-[#0C1114] shadow-2xl flex flex-col overflow-hidden
-            inset-x-0 top-0 rounded-none border-0
+            inset-x-0 top-0 h-[100dvh] rounded-none border-0
             sm:inset-auto sm:bottom-5 sm:right-5
             sm:w-[min(500px,calc(100vw-2.5rem))]
             sm:h-[min(700px,calc(100dvh-7.5rem))]
+            sm:top-auto
             sm:rounded-2xl sm:border sm:border-white/20
           "
-          style={{ height: mobileHeight }}
+          style={mobileStyle}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 sm:py-3 py-5 border-b border-white/15 bg-[#0C1114] shrink-0">
             <div className="flex items-center gap-4 sm:gap-2">
               <Image
-  src="/bacwayBadge.svg"
-  alt=""
-  width={40}
-  height={40}
-  className="w-10 h-10 sm:w-[30px] sm:h-[30px]"
-/>
-
+                src="/bacwayBadge.svg"
+                alt=""
+                width={40}
+                height={40}
+                className="w-10 h-10 sm:w-[30px] sm:h-[30px]"
+              />
               <div>
                 <p className="text-white text-lg sm:text-sm font-semibold leading-tight">
                   Bacy
@@ -240,8 +252,6 @@ export default function AgentWidget() {
                 dir="auto"
                 placeholder="Ask me something"
                 disabled={loading}
-                // 16px+ on mobile prevents iOS Safari auto-zoom on focus.
-                // Inline style is the most bulletproof — beats any Tailwind override.
                 style={{ fontSize: "16px" }}
                 className="flex-1 bg-transparent text-white sm:!text-sm px-1 py-1 placeholder-white/25 focus:outline-none resize-none max-h-24"
               />
