@@ -180,17 +180,7 @@ export default function AgentWidget() {
             sm:h-[min(700px,calc(100dvh-7.5rem))]
             sm:rounded-2xl sm:border sm:border-white/20
           "
-          style={{
-            // On mobile: lock to the actual visible viewport (keyboard-aware).
-            // sm:h-... overrides this on desktop via Tailwind's specificity
-            // because the inline style is only set when JS detects mobile size.
-            // We use a media query trick: only apply on sm:and-below by checking
-            // viewport width.
-            height:
-              typeof window !== "undefined" && window.innerWidth < 640
-                ? mobileHeight
-                : undefined,
-          }}
+          style={{ height: mobileHeight }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 sm:py-3 py-5 border-b border-white/15 bg-[#0C1114] shrink-0">
