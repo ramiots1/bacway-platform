@@ -44,8 +44,10 @@ export default function AgentWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Lock background scroll on mobile when chat is open
   useEffect(() => {
@@ -54,6 +56,34 @@ export default function AgentWidget() {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = original;
+    };
+  }, [open]);
+
+  // Track the visualViewport height — this is the actual visible area,
+  // excluding the keyboard. Updates whenever keyboard opens/closes.
+  useEffect(() => {
+    if (!open || typeof window === "undefined") return;
+
+    const vv = window.visualViewport;
+    if (!vv) {
+      // Fallback for browsers without visualViewport API (very rare now)
+      setViewportHeight(window.innerHeight);
+      return;
+    }
+
+    const update = () => {
+      setViewportHeight(vv.height);
+      // Also keep scroll pinned to bottom when keyboard appears
+      const el = scrollRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    };
+
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
     };
   }, [open]);
 
@@ -71,21 +101,11 @@ export default function AgentWidget() {
     return () => cancelAnimationFrame(id);
   }, [messages, loading]);
 
-  // Focus input when panel opens — delay slightly on mobile so the open
-  // animation finishes before the keyboard slides up
-
-  // Keep the bottom of the chat in view when the mobile keyboard opens
+  // Focus input when panel opens — small delay so the open animation finishes
   useEffect(() => {
-    if (!open || typeof window === "undefined" || !window.visualViewport) return;
-
-    const handleResize = () => {
-      const el = scrollRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
-    };
-
-    window.visualViewport.addEventListener("resize", handleResize);
-    return () =>
-      window.visualViewport?.removeEventListener("resize", handleResize);
+    if (!open) return;
+    const id = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(id);
   }, [open]);
 
   async function send() {
@@ -130,12 +150,16 @@ export default function AgentWidget() {
     }
   }
 
+  // Mobile panel height — falls back to 100dvh if JS not run yet
+  // Desktop ignores this entirely (sm:h-... wins)
+  const mobileHeight = viewportHeight ? `${viewportHeight}px` : "100dvh";
+
   return (
     <>
       {/* ── Floating button ── */}
       {!open && (
         <button
-          aria-label="Open Bacway Cat chat"
+          aria-label="Open Bacy chat"
           onClick={() => setOpen(true)}
           className="fixed bottom-5 right-5 sm:bottom-7 border border-white/20 h-14 px-5 rounded-full bg-blue-900 hover:bg-blue-400 shadow-lg flex items-center gap-3 transition-transform hover:scale-105 z-[100] text-white"
         >
@@ -147,24 +171,43 @@ export default function AgentWidget() {
       {/* ── Chat panel ── */}
       {open && (
         <div
+          ref={panelRef}
           className="
-           fixed z-[300] bg-[#0C1114] shadow-2xl flex flex-col overflow-hidden
-    inset-0 rounded-none border-0
-    h-[100dvh]
-    sm:inset-auto sm:bottom-5 sm:right-5
-    sm:w-[min(500px,calc(100vw-2.5rem))]
-    sm:h-[min(700px,calc(100dvh-7.5rem))]
-    sm:rounded-2xl sm:border sm:border-white/20"
+            fixed z-[300] bg-[#0C1114] shadow-2xl flex flex-col overflow-hidden
+            inset-x-0 top-0 rounded-none border-0
+            sm:inset-auto sm:bottom-5 sm:right-5
+            sm:w-[min(500px,calc(100vw-2.5rem))]
+            sm:h-[min(700px,calc(100dvh-7.5rem))]
+            sm:rounded-2xl sm:border sm:border-white/20
+          "
+          style={{
+            // On mobile: lock to the actual visible viewport (keyboard-aware).
+            // sm:h-... overrides this on desktop via Tailwind's specificity
+            // because the inline style is only set when JS detects mobile size.
+            // We use a media query trick: only apply on sm:and-below by checking
+            // viewport width.
+            height:
+              typeof window !== "undefined" && window.innerWidth < 640
+                ? mobileHeight
+                : undefined,
+          }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/15 bg-[#0C1114] shrink-0">
-            <div className="flex items-center gap-2">
-              <Image src="/bacwayBadge.svg" alt="" width={28} height={28} />
+          <div className="flex items-center justify-between px-4 sm:py-3 py-5 border-b border-white/15 bg-[#0C1114] shrink-0">
+            <div className="flex items-center gap-4 sm:gap-2">
+              <Image
+  src="/bacwayBadge.svg"
+  alt=""
+  width={40}
+  height={40}
+  className="w-10 h-10 sm:w-[30px] sm:h-[30px]"
+/>
+
               <div>
-                <p className="text-white text-sm font-semibold leading-tight">
+                <p className="text-white text-lg sm:text-sm font-semibold leading-tight">
                   Bacy
                 </p>
-                <p className="text-white/40 text-[10px]">
+                <p className="text-white/40 sm:text-[10px] text-xs">
                   This is a test version ;)
                 </p>
               </div>
@@ -207,7 +250,10 @@ export default function AgentWidget() {
                 dir="auto"
                 placeholder="Ask me something"
                 disabled={loading}
-                className="flex-1 bg-transparent text-white text-base sm:text-sm px-1 py-1 placeholder-white/25 focus:outline-none resize-none max-h-24"
+                // 16px+ on mobile prevents iOS Safari auto-zoom on focus.
+                // Inline style is the most bulletproof — beats any Tailwind override.
+                style={{ fontSize: "16px" }}
+                className="flex-1 bg-transparent text-white sm:!text-sm px-1 py-1 placeholder-white/25 focus:outline-none resize-none max-h-24"
               />
               <button
                 onClick={send}
