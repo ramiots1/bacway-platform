@@ -21,15 +21,14 @@ const API_URL =
 const WELCOME: Message = {
   role: "assistant",
   content:
-    "Salam Alaykom! I'm the Bacway Cat 🐱, your study buddy for l'BAC.\n\n" +
+    "Salam Alaykom! I'm Bacy 🐱, your study buddy for l'BAC.\n\n" +
     "Ask me anything about your speciality, find resources from top alumni, " +
     "or just say hi. I only know about high school and the Algerian BAC, " +
     "so let's keep it on topic!",
 };
 
-const MAX_HISTORY = 40; // matches backend cap
+const MAX_HISTORY = 40;
 
-// Hebrew + Arabic + Arabic Supplement + Arabic Extended + Arabic Presentation Forms
 const RTL_RE =
   /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u08A0-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
 
@@ -48,24 +47,45 @@ export default function AgentWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom on new messages
+  // Lock background scroll on mobile when chat is open
   useEffect(() => {
-  const el = scrollRef.current;
-  if (!el) return;
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
 
-  // Only auto-scroll if user is already near the bottom (within 100px)
-  const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
-  if (!nearBottom) return;
-
-  const id = requestAnimationFrame(() => {
-    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-  });
-  return () => cancelAnimationFrame(id);
-}, [messages, loading]);
-
-  // Focus input when panel opens
+  // Auto-scroll to bottom on new messages (only if user is near bottom)
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+    if (!nearBottom) return;
+
+    const id = requestAnimationFrame(() => {
+      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [messages, loading]);
+
+  // Focus input when panel opens — delay slightly on mobile so the open
+  // animation finishes before the keyboard slides up
+
+  // Keep the bottom of the chat in view when the mobile keyboard opens
+  useEffect(() => {
+    if (!open || typeof window === "undefined" || !window.visualViewport) return;
+
+    const handleResize = () => {
+      const el = scrollRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    };
+
+    window.visualViewport.addEventListener("resize", handleResize);
+    return () =>
+      window.visualViewport?.removeEventListener("resize", handleResize);
   }, [open]);
 
   async function send() {
@@ -83,7 +103,6 @@ export default function AgentWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // Send last N messages, excluding the seed welcome (it's pure UI)
           messages: next.slice(-MAX_HISTORY).filter((m) => m !== WELCOME),
         }),
       });
@@ -118,29 +137,32 @@ export default function AgentWidget() {
         <button
           aria-label="Open Bacway Cat chat"
           onClick={() => setOpen(true)}
-          className="fixed bottom-7 border border-white/20 right-5 h-14 px-5 rounded-full bg-blue-900 hover:bg-blue-400 shadow-lg flex items-center gap-3 transition-transform hover:scale-105 z-[100] text-white"
+          className="fixed bottom-5 right-5 sm:bottom-7 border border-white/20 h-14 px-5 rounded-full bg-blue-900 hover:bg-blue-400 shadow-lg flex items-center gap-3 transition-transform hover:scale-105 z-[100] text-white"
         >
-          <span className="font-medium text-base">Ask Bacway Agent</span>
-          <Image
-            src="/bacwayBadge.svg"
-            alt=""
-            width={32}
-            height={32}
-          />
+          <span className="font-medium text-sm sm:text-base">Ask Bacy</span>
+          <Image src="/bacwayBadge.svg" alt="" width={32} height={32} />
         </button>
       )}
 
       {/* ── Chat panel ── */}
       {open && (
-        
-        <div className=" fixed bottom-5 right-5 sm:w-[min(500px,calc(100vw-2.5rem))] w-[min(380px,calc(100vw-2.5rem))] h-[calc(100vh-7.5rem)] bg-[#0C1114] border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-[100]">
+        <div
+          className="
+           fixed z-[300] bg-[#0C1114] shadow-2xl flex flex-col overflow-hidden
+    inset-0 rounded-none border-0
+    h-[100dvh]
+    sm:inset-auto sm:bottom-5 sm:right-5
+    sm:w-[min(500px,calc(100vw-2.5rem))]
+    sm:h-[min(700px,calc(100dvh-7.5rem))]
+    sm:rounded-2xl sm:border sm:border-white/20"
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/15 bg-[#0C1114]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/15 bg-[#0C1114] shrink-0">
             <div className="flex items-center gap-2">
               <Image src="/bacwayBadge.svg" alt="" width={28} height={28} />
               <div>
                 <p className="text-white text-sm font-semibold leading-tight">
-                  Bacway Cat
+                  Bacy
                 </p>
                 <p className="text-white/40 text-[10px]">
                   This is a test version ;)
@@ -150,7 +172,7 @@ export default function AgentWidget() {
             <button
               onClick={() => setOpen(false)}
               aria-label="Close chat"
-              className="text-white/50 hover:text-white text-2xl leading-none w-7 h-7 flex items-center justify-center"
+              className="text-white/50 hover:text-white text-3xl leading-none w-10 h-10 flex items-center justify-center -mr-2"
             >
               ×
             </button>
@@ -159,30 +181,22 @@ export default function AgentWidget() {
           {/* Messages */}
           <div
             ref={scrollRef}
-            className="flex-1 overflow-y-auto px-4 py-3 space-y-3
-             [&::-webkit-scrollbar]:w-1.5
-             [&::-webkit-scrollbar-track]:bg-transparent
-             [&::-webkit-scrollbar-thumb]:bg-white/15
-             [&::-webkit-scrollbar-thumb]:rounded-full
-             [&::-webkit-scrollbar-thumb]:hover:bg-white/30
-             [&::-webkit-scrollbar-thumb]: m-1"
+            className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3 chat-scrollbar"
           >
             {messages.map((m, i) => (
               <Bubble key={i} role={m.role} content={m.content} />
             ))}
-            {loading && (
-              <Bubble role="assistant" content="…" typing />
-            )}
+            {loading && <Bubble role="assistant" content="…" typing />}
             {error && (
               <Bubble
                 role="assistant"
-                content={`Something went wrong, try again later or please report the issue.`}
+                content="Something went wrong, try again later or please report the issue."
               />
             )}
           </div>
 
           {/* Input */}
-          <div className="p-3">
+          <div className="p-3 shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div className="flex gap-2 items-center bg-[rgb(20,25,28)] border border-white/15 rounded-lg px-3 py-2">
               <textarea
                 ref={inputRef}
@@ -193,13 +207,13 @@ export default function AgentWidget() {
                 dir="auto"
                 placeholder="Ask me something"
                 disabled={loading}
-                className="flex-1 bg-transparent text-white text-sm px-1 py-1 placeholder-white/25 focus:outline-none resize-none max-h-24"
+                className="flex-1 bg-transparent text-white text-base sm:text-sm px-1 py-1 placeholder-white/25 focus:outline-none resize-none max-h-24"
               />
               <button
                 onClick={send}
                 disabled={!input.trim() || loading}
                 aria-label="Send"
-                className="h-9 px-4 bg-blue-500 hover:bg-blue-400 disabled:bg-white/10 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors"
+                className="h-10 px-4 bg-blue-500 hover:bg-blue-400 disabled:bg-white/10 disabled:cursor-not-allowed rounded-lg text-white text-sm font-medium transition-colors shrink-0"
               >
                 Send
               </button>
@@ -235,7 +249,7 @@ function Bubble({
         className={`max-w-[85%] px-3 py-2 rounded-2xl sm:text-base text-sm leading-relaxed whitespace-pre-wrap break-words ${
           isUser
             ? "bg-blue-500 text-white rounded-br-sm"
-            : "bg-white/8 text-white rounded-bl-sm "
+            : "bg-white/8 text-white rounded-bl-sm"
         } ${rtl ? "text-right font-arabic" : ""}`}
       >
         {typing ? <TypingDots /> : <Linkify text={content} />}
@@ -263,7 +277,6 @@ function TypingDots() {
   );
 }
 
-// Turn plain-text URLs into clickable links without dragging in a markdown lib
 function Linkify({ text }: { text: string }) {
   const parts = text.split(/(https?:\/\/[^\s)]+)/g);
   return (
