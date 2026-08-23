@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 #   - "llama-3.3-70b-versatile"     — Meta Llama, fast, decent tools
 #   - "openai/gpt-oss-20b"          — smaller GPT-OSS, much faster
 #   - "qwen/qwen3-32b"              — best Arabic comprehension, slower
-MODEL_NAME = "openai/gpt-oss-120b"
+MODEL_NAME = "openai/gpt-oss-20b"
 MAX_TOOL_ROUNDS = 3
 
 # Tool schemas in OpenAI/Groq format

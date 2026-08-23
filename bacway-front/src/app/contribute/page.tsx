@@ -106,11 +106,12 @@ const Section: React.FC<{
   subtitle?: string;
   action?:   React.ReactNode;
   children:  React.ReactNode;
-}> = ({ title, subtitle, action, children }) => (
+  required?: boolean;
+}> = ({ title, subtitle, action, children, required }) => (
   <div className="border-x border-white/30 bg-[rgb(12,17,20)]">
     <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/30">
       <div>
-        <p className="text-white text-sm font-semibold leading-tight">{title}</p>
+        <p className="text-white text-sm font-semibold leading-tight">{title} {required && <span className="text-blue-400 ml-0.5">*</span>}</p>
         {subtitle && <p className="text-white/35 text-xs mt-0.5">{subtitle}</p>}
       </div>
       {action}
@@ -307,7 +308,8 @@ const ContributePage: React.FC = () => {
 
   const isValid = () => {
     if (!info.fullName.trim() || !info.email.trim() || !info.bacYear.trim() || !info.division) return false;
-    if (mode === 'letter' && letter.length < MIN_LETTER_CHARS) return false;
+    if (mode === 'letter' && (letter.length < MIN_LETTER_CHARS || !letter.trim())) return false;
+    if (mode === 'contribute' && drives.some(d => !d.name.trim() || !d.url.trim() || !d.description.trim())) return false;
     return true;
   };
 
@@ -444,7 +446,7 @@ const ContributePage: React.FC = () => {
                 <input value={info.bacYear} onChange={setField('bacYear')} placeholder={t('contribute.personal.bacYearPlaceholder')} className={inputCls} />
               </div>
               <div>
-                <Label text={t('contribute.personal.grade')} />
+                <Label text={t('contribute.personal.grade')} required />
                 <input value={info.grade} onChange={setField('grade')} placeholder={t('contribute.personal.gradePlaceholder')} className={inputCls} />
               </div>
             </div>
@@ -525,6 +527,7 @@ const ContributePage: React.FC = () => {
                     </button>
                   : <span className="text-xs text-white/20">{t('contribute.drives.maxReached')}</span>
               }
+              required
             >
               {drives.map((d, i) => (
                 <div key={i} className="space-y-2">
@@ -536,9 +539,9 @@ const ContributePage: React.FC = () => {
                       </button>
                     </div>
                   )}
-                  <input value={d.name} onChange={e => updateDrive(i, 'name', e.target.value)} placeholder={t('contribute.drives.namePlaceholder')} className={inputCls} />
-                  <input value={d.url}  onChange={e => updateDrive(i, 'url',  e.target.value)} placeholder={t('contribute.drives.urlPlaceholder')} className={inputCls} />
-                  <textarea value={d.description} onChange={e => updateDrive(i, 'description', e.target.value)} placeholder={t('contribute.drives.descriptionPlaceholder')} rows={3} className={`${inputCls} resize-none`} />
+                  <input required value={d.name} onChange={e => updateDrive(i, 'name', e.target.value)} placeholder={t('contribute.drives.namePlaceholder')} className={inputCls} />
+                  <input required value={d.url}  onChange={e => updateDrive(i, 'url',  e.target.value)} placeholder={t('contribute.drives.urlPlaceholder')} className={inputCls} />
+                  <textarea required value={d.description} onChange={e => updateDrive(i, 'description', e.target.value)} placeholder={t('contribute.drives.descriptionPlaceholder')} rows={3} className={`${inputCls} resize-none`} />
                   {i < drives.length - 1 && <div className="border-t border-white/5 mt-1" />}
                 </div>
               ))}
@@ -553,6 +556,7 @@ const ContributePage: React.FC = () => {
           <div className="w-full border-y border-white/40 flex flex-col items-center">
             <div className="w-full px-5 max-w-2xl">
               <Section title={t('contribute.picture.title')} subtitle={t('contribute.picture.subtitle')}>
+                
                 <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => setPicture(e.target.files?.[0] ?? null)} />
                 <button onClick={() => fileRef.current?.click()} className={`${inputCls} text-center ${picture ? 'text-white' : 'text-white/20'}`}>
                   {picture ? picture.name : t('contribute.picture.upload')}
@@ -564,9 +568,11 @@ const ContributePage: React.FC = () => {
 
           <div className="w-full border-b border-white/40 flex flex-col items-center">
             <div className="w-full px-5 max-w-2xl">
-              <Section title={t('contribute.letter.title')} subtitle={t('contribute.letter.subtitle')}>
+              <Section title={t('contribute.letter.title')} subtitle={t('contribute.letter.subtitle')} required>
+                
                 <div className="relative">
                   <textarea
+                    required
                     value={letter}
                     onChange={e => setLetter(e.target.value)}
                     placeholder={t('contribute.letter.placeholder')}
